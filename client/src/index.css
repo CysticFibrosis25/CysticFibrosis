@@ -1,1 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 @import "tailwindcss";
+
+.font-dm-sans {
+  font-family: "DM Sans", sans-serif;
+}
+
+body {
+  scrollbar-width: auto;
+  scrollbar-color: #a0aec0 #e2e8f0;
+  overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+body::-webkit-scrollbar-thumb {
+  background: #a0aec0;
+  border-radius: 6px;
+}
+body::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
