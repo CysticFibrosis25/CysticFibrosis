@@ -21,3 +21,20 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-track {
   background: #e2e8f0;
 }
+
+/* Soft breathing animation for lung image */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.breathing-animation {
+  animation: breathe 3s ease-in-out infinite;
+}
