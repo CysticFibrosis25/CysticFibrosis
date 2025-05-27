@@ -1,9 +1,14 @@
-import React from "react";
+import { motion } from "framer-motion";
 import { features } from "../constants/features";
 
 const Features = () => {
   return (
-    <div className="py-12">
+    <motion.div
+      className="py-12"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+    >
       <div className="max-w-6xl mx-auto px-2 sm:px-4 grid grid-cols-2 gap-1 md:grid-cols-4">
         {features.map((feature, idx) => (
           <div
@@ -26,7 +31,7 @@ const Features = () => {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
