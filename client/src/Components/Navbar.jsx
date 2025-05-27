@@ -11,7 +11,7 @@ const Navbar = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <nav className="flex items-center justify-between px-4 py-2 md:w-[70vw] w-[80vw] border border-white rounded-full mx-auto">
+      <nav className="flex items-center justify-between px-4 py-2 md:w-[70vw] w-[90vw] border border-white rounded-full mx-auto">
         <motion.div
           className="text-lg font-bold"
           whileHover={{ scale: 1.05 }}
@@ -81,18 +81,18 @@ const Navbar = () => {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              className="absolute right-4 mt-2 w-40 bg-white rounded shadow-lg z-50"
+              className="absolute right-4 mt-2 w-40 bg-white/50 backdrop-blur rounded-4xl shadow-lg z-20"
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
               {" "}
-              <ul className="flex flex-col py-2">
+              <ul className="flex flex-col py-4 px-2">
                 {[
                   { name: "Home", href: "/" },
-                  { name: "Login/Signup", href: "/login" },
                   { name: "Dashboard", href: "/dashboard" },
+                  { name: "Login/Signup", href: "/login" },
                 ].map((item, index) => (
                   <motion.li
                     key={item.name}

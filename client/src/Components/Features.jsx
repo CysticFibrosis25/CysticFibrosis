@@ -4,7 +4,7 @@ import { features } from "../constants/features";
 const Features = () => {
   return (
     <div className="py-12">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 grid grid-cols-2 gap-1 md:grid-cols-4">
         {features.map((feature, idx) => (
           <div
             key={idx}
@@ -21,7 +21,7 @@ const Features = () => {
             <img
               src={feature.imageUrl}
               alt={feature.heading}
-              className="absolute -bottom-6 -left-4 w-24 h-24 sm:w-32 sm:h-32 mb-2 object-contain"
+              className="absolute -bottom-6 -left-4 w-28 h-28 sm:w-32 sm:h-32 mb-2 object-contain"
             />
           </div>
         ))}

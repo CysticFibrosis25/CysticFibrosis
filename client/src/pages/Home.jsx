@@ -8,12 +8,12 @@ const Home = () => {
       <img
         src="/home/heroimage.png"
         alt="Hero"
-        className="w-full h-[1050px] object-cover"
+        className="w-full h-[160vh] md:h-[150vh] object-cover"
       />
       <div className="absolute top-0 left-0 w-full z-10">
         <Navbar />
         <motion.div
-          className="flex flex-col items-center justify-center h-[50vh] md:h-[60vh] lg:h-[60vh] text-white mt-8 md:mt-12 font-dm-sans tracking-tight"
+          className="flex flex-col items-center justify-center h-[65vh] md:h-[60vh] lg:h-[70vh] text-white mt-8 md:mt-12 font-dm-sans tracking-tight"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
