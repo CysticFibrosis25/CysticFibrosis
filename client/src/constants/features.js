@@ -53,20 +53,25 @@ export const healthtips = [
     heading: "🫁 Breathe Better",
     description:
       "Do daily airway clearance techniques. Avoid smoke, dust, and pollution. Use your nebulizer as prescribed. Practice deep breathing or light cardio.",
+
+    imageUrl: "/home/lung2.png",
   },
   {
     heading: "🍽️ Fuel Your Body Right",
     description:
       "Eat high-calorie, high-fat meals.Take enzyme pills with every meal/snack.Include vitamins A, D, E, K in your diet.Stay well-hydrated all day.",
+    imageUrl: "/home/healthy-food.png",
   },
   {
     heading: "💊 Stay on Track with Care",
     description:
       "Follow your medication and therapy schedule.Visit your CF care team regularly.Keep devices clean and stored properly.Set reminders for meds and checkups.",
+    imageUrl: "/home/medication.png",
   },
   {
     heading: "🧴 Stay Germ-Free",
     description:
       "Wash hands frequently.Clean respiratory equipment daily.Avoid close contact with other CF patients.Wear a mask when needed.",
+    imageUrl: "/home/germs.png",
   },
 ];

@@ -3,6 +3,8 @@ import Navbar from "../Components/Navbar";
 import Features from "../Components/Features";
 import Hero from "../Components/Hero";
 import Howdoesitwork from "../Components/Howdoesitwork";
+import Healthtips from "../Components/Healthtips";
+import Footer from "../Components/Footer";
 
 const Home = () => {
   return (
@@ -18,6 +20,8 @@ const Home = () => {
         <Features />
       </div>
       <Howdoesitwork />
+      <Healthtips />
+      <Footer />
     </div>
   );
 };

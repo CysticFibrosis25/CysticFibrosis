@@ -7,11 +7,13 @@ const Features = () => {
       className="py-12"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 1.2, ease: "easeOut" }}
+      transition={{ duration: 0.4, delay: 1.2, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-2 sm:px-4 grid grid-cols-2 gap-1 md:grid-cols-4">
         {features.map((feature, idx) => (
-          <div
+          <motion.div
+            whileHover={{ y: -2 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
             key={idx}
             className="relative min-h-[250px] sm:min-h-[300px] flex flex-col items-center text-start p-5 sm:p-6 rounded-md bg-[#fdffff30] backdrop-blur font-dm-sans tracking-tighter overflow-hidden"
           >
@@ -28,7 +30,7 @@ const Features = () => {
               alt={feature.heading}
               className="absolute -bottom-6 -left-4 w-28 h-28 sm:w-32 sm:h-32 mb-2 object-contain"
             />
-          </div>
+          </motion.div>
         ))}
       </div>
     </motion.div>
