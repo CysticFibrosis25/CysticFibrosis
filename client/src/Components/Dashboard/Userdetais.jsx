@@ -5,9 +5,9 @@ const Userdetais = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [profile, setProfile] = useState({
-    name: "Aryan Mishra",
-    email: "aryan.mishra@example.com",
-    phone: "+1 (555) 123-4567",
+    name: "B V Vivek",
+    email: "vivek@example.com",
+    phone: 9606307685,
     age: "17",
     weight: "60 kg",
   });
@@ -48,13 +48,13 @@ const Userdetais = () => {
   };
 
   return (
-    <div className="w-[95%] md:w-[70%] flex md:flex-row flex-col gap-2 mx-auto mt-4 mb-4">
+    <div className="w-[95%] md:w-[70%] flex md:flex-row flex-col gap-3 mx-auto mt-4 mb-2">
       <div className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full">
         <div className="p-2 flex-shrink-0">
           <img
             src="/dashboard/profile.jpeg"
             alt="Profile"
-            className="md:w-36 md:h-36 w-28 h-28 rounded-full mx-auto object-cover"
+            className="md:w-32 md:h-32 w-28 h-28 rounded-full mx-auto object-cover"
           />
         </div>
         <div className="items-start justify-center flex-1 min-w-0">
@@ -86,14 +86,14 @@ const Userdetais = () => {
             {remainders.map((reminder, index) => (
               <div
                 key={index}
-                className="bg-[#7ADBE0] px-4 py-2 text-xs md:text-sm rounded-full mb-2"
+                className="bg-[#7ADBE0] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2"
               >
                 {reminder}
               </div>
             ))}
           </div>
         </div>
-        <div className="flex items-center justify-center pr-8 h-full">
+        <div className="flex items-center justify-center px-8 h-full">
           <button
             className="bg-[#0A7CFF] text-white rounded-full font-semibold tracking-tight hover:bg-[#005DE0] transition duration-300 flex items-center justify-center h-[100px] w-8 text-2xl"
             onClick={() => handleOpenModal("add")}
