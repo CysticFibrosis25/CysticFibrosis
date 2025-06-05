@@ -38,3 +38,8 @@ body::-webkit-scrollbar-track {
 .breathing-animation {
   animation: breathe 3.5s ease-in-out infinite;
 }
+
+/* Slower, smoother spinner animation */
+.animate-spin-slow {
+  animation: spin 1.4s linear infinite;
+}
