@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 const Howdoesitwork = () => {
   return (
     <motion.div
-      className="flex flex-col items-center justify-center my-15 font-dm-sans"
+      className="flex flex-col items-center justify-center my-15 px-2 font-dm-sans"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
     >
-      <div className="flex flex-col border-b-8 border-[#319CEA] items-center justify-center ">
-        <div className="flex flex-col items-center text-white justify-center p-10  rounded-sm md:w-[75vw] bg-gradient-to-r from-[#319CEA] to-[#5FBBFF] tracking-tight">
-          <p className="text-3xl md:text-4xl font-medium">
+      <div className="flex flex-col items-center justify-center ">
+        <div className="flex flex-col items-center text-white justify-center px-10 py-6 text-center rounded-sm md:w-[75vw] bg-gradient-to-r from-[#319CEA] to-[#5FBBFF] tracking-tight">
+          <p className="text-2xl md:text-4xl font-medium">
             How does this work?
           </p>
           <p>Onboarding is seem easy and achievable.</p>

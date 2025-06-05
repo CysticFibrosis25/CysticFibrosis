@@ -7,7 +7,7 @@ const Features = () => {
       className="py-12"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 1.2, ease: "easeOut" }}
+      transition={{ duration: 0.3, delay: 0.8, ease: "easeOut" }}
     >
       <div className="max-w-6xl mx-auto px-2 sm:px-4 grid grid-cols-2 gap-1 md:grid-cols-4">
         {features.map((feature, idx) => (

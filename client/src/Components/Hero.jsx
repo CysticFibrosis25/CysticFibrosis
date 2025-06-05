@@ -4,10 +4,10 @@ const Hero = () => {
   return (
     <div>
       <motion.div
-        className="flex flex-col items-center justify-center h-[65vh] md:h-[50vh] lg:h-[60vh] text-white mt-8 md:mt-12 font-dm-sans tracking-tight"
+        className="flex flex-col items-center justify-center h-[68vh] md:h-[60vh] lg:h-[70vh] text-white mt-8 md:mt-12 font-dm-sans tracking-tight"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.div className="my-6 flex flex-col items-center justify-center">
           <div className="text-4xl md:text-7xl font-medium mb-4 ">
@@ -33,7 +33,7 @@ const Hero = () => {
           className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto items-center mt-6"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
           <motion.button
             className="bg-[#0A7CFF] text-white font-medium py-3 px-8 md:px-16 rounded-full w-4/5 md:w-auto"

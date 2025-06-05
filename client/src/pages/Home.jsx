@@ -23,7 +23,10 @@ const Home = () => {
       <img
         src="/home/heroimage.png"
         alt="Hero"
-        className="w-full h-[160vh] md:h-[150vh] object-cover"
+        className="w-full h-[150vh] md:h-[150vh] object-cover"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
       />
       <div className="absolute top-0 left-0 w-full z-10">
         <Navbar />
