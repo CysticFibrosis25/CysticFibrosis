@@ -7,10 +7,10 @@ const Footer = () => {
         BREATE <span className="text-[#260AFF]">WELL</span>{" "}
       </p>
       <div className="gap-4 opacity-80 flex md:flex-row flex-col mt-8 md:mt-0  items-center justify-center">
-        <a href="#">Home</a>
-        <a href="#">Dashboard</a>
-        <a href="#">Chatbot</a>
-        <a href="#">Login/Signup</a>
+        <a href="/">Home</a>
+        <a href="dashboard">Dashboard</a>
+        <a href="chatbot">Chatbot</a>
+        <a href="login">Login/Signup</a>
       </div>
       <p className="text-sm text-[#015a96] mt-8 md:mt-0">
         © 2025 Breathe Well. All rights reserved.

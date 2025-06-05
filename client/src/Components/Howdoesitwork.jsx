@@ -21,7 +21,7 @@ const Howdoesitwork = () => {
             <div key={index} className="flex items-start mb-4 tracking-tighter">
               <div className="text-6xl px-3 text-[#6EABD4]">{index + 1}</div>
               <div>
-                <p className="text-3xl ">{step.heading}</p>
+                <p className="text-2xl ">{step.heading}</p>
                 <p className="text-sm">{step.description}</p>
               </div>
             </div>
