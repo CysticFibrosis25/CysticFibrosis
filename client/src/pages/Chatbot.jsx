@@ -35,7 +35,7 @@ const Chatbot = () => {
       <Navbar />
       <div className="h-full relative font-dm-sans flex flex-col">
         <div className="flex-1 flex flex-col items-center justify-center pt-2 pb-4">
-          <div className="w-full md:max-w-2xl flex flex-col h-[75vh] md:h-[90vh]">
+          <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh]">
             {/* <div className="flex items-center justify-center gap-1 px-6 py-4 ">
               <img src="/home/chatbot.png" alt="Chatbot" className="w-6 h-6 " />
 

@@ -26,7 +26,7 @@ const Navbar = () => {
         </motion.div>
 
         <motion.button
-          className={`md:hidden flex items-center px-3 py-2 ${
+          className={`md:hidden flex items-center px-3  ${
             isChatbot ? "text-black" : "text-white"
           }`}
           onClick={() => setMenuOpen(!menuOpen)}
@@ -66,7 +66,6 @@ const Navbar = () => {
               if (item === "Dashboard") href = "/dashboard";
               else if (item === "Chatbot") href = "/chatbot";
               else if (item === "Login/Signup") href = "/login";
-              // Home stays as "/"
               return (
                 <motion.li
                   key={item}
