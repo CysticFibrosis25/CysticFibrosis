@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const isChatbot = window.location.pathname === "/chatbot";
+  const isChatbot =
+    window.location.pathname === "/chatbot" ||
+    window.location.pathname === "/dashboard";
 
   return (
     <motion.div
