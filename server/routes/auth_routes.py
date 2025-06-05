@@ -4,7 +4,6 @@ from models.user import User
 auth_bp = Blueprint('auth', __name__)
 user_model = User()
 
-# Signup Route
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -13,7 +12,7 @@ def signup():
     user_model.create_user(data)
     return jsonify({"message": "Signup successful!"}), 201
 
-# Login Route
+
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -24,7 +23,6 @@ def login():
     if not user_model.verify_password(user["password"], data["password"]):
         return jsonify({"message": "Incorrect password."}), 401
 
-    # You can return more user data if needed
     return jsonify({
         "message": "Login successful!",
         "user": {

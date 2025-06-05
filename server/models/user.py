@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User:
     def __init__(self):
-        self.collection = db["users"]  # users collection
+        self.collection = db["users"]  
 
     def create_user(self, data):
         data["password"] = generate_password_hash(data["password"])
