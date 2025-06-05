@@ -43,7 +43,7 @@ const Chatbot = () => {
                 CF Chatbot
               </span>
             </div> */}
-            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+            <div className="flex-1 overflow-y-auto px-4 py-2 md:space-y-4 space-y-2">
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
@@ -63,7 +63,9 @@ const Chatbot = () => {
                       {msg.sender === "bot" ? (
                         <div className="bg-blue-400 h-4 w-4 rounded-full "></div>
                       ) : null}
-                      <div className="max-w-[150px]">{msg.text}</div>
+                      <div className="max-w-[150px] md:max-w-[2750px]">
+                        {msg.text}
+                      </div>
                     </div>
                   </div>
                 </div>

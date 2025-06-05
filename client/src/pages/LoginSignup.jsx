@@ -17,7 +17,7 @@ const LoginSignup = () => {
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[60vh] pt-16">
           <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-10 w-[92vw] max-w-md flex flex-col items-center border border-[#0A7CFF]/20">
-            <h2 className="text-3xl sm:text-4xl font-extrabold mb-2 text-[#0A7CFF] tracking-tight drop-shadow-lg">
+            <h2 className="text-3xl sm:text-4xl font-semibold mb-2 text-[#0A7CFF] tracking-tight ">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
             <p className="text-gray-600 text-xs sm:text-sm mb-6 text-center max-w-xs">
