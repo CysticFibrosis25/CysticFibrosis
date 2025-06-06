@@ -104,9 +104,7 @@ const Navbar = () => {
             <motion.li>
               <button
                 onClick={handleLogout}
-                className={`hover:underline ${
-                  isChatbot ? "text-black" : "text-white"
-                }`}
+                className="hover:underline font-bold text-[#FF3131]"
               >
                 Logout
               </button>
