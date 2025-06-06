@@ -1,50 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
 
 const Userdetais = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [profile, setProfile] = useState({
-    name: "B V Vivek",
-    email: "vivek@example.com",
-    phone: 9606307685,
-    age: "17",
-    weight: "60 kg",
-  });
-  const [remainders, setRemainders] = useState([
-    "Take morning pills at 8:00 AM",
-    "Inhaler at 12:00 PM",
-    "Enzyme supplement at lunch",
-    "Evening pills at 8:00 PM",
-  ]);
-  const [editProfile, setEditProfile] = useState(profile);
+  const [profile, setProfile] = useState({});
+  const [remainders, setRemainders] = useState([]);
+  const [editProfile, setEditProfile] = useState({});
   const [newRemainder, setNewRemainder] = useState("");
+  const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const email = localStorage.getItem("email");
+      if (!email) {
+       console.error("Email is missing — user not logged in?");
+        return;
+      } // Assuming you store email in localStorage after login
+      const response = await axios.get(`${API_BASE_URL}/auth/user/details?email=${email}`);
+      setProfile(response.data);
+      setRemainders(response.data.reminders);
+      setEditProfile(response.data);
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleOpenModal = (type) => {
     setModalType(type);
     if (type === "edit") setEditProfile(profile);
     setModalOpen(true);
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
     setModalType(null);
     setNewRemainder("");
   };
+
   const handleProfileChange = (e) => {
     setEditProfile({ ...editProfile, [e.target.name]: e.target.value });
   };
-  const handleProfileSave = (e) => {
+
+  const handleProfileSave = async (e) => {
     e.preventDefault();
+    const email = localStorage.getItem("email");
+    await axios.put(`${API_BASE_URL}/auth/user/update`, { ...editProfile, email });
     setProfile(editProfile);
     handleCloseModal();
   };
-  const handleRemainderAdd = (e) => {
+
+  const handleRemainderAdd = async (e) => {
     e.preventDefault();
     if (newRemainder.trim()) {
+      const email = localStorage.getItem("email");
+      await axios.post(`${API_BASE_URL}/auth/user/reminders`, { email, reminder: newRemainder });
       setRemainders([newRemainder, ...remainders]);
       setNewRemainder("");
       handleCloseModal();
     }
+  };
+
+  const handleRemainderDelete = async (reminder) => {
+    const email = localStorage.getItem("email");
+    await axios.delete(`${API_BASE_URL}/auth/user/reminders`, { data: { email, reminder } });
+    setRemainders(remainders.filter(r => r !== reminder));
   };
 
   return (
@@ -79,16 +100,17 @@ const Userdetais = () => {
         </div>
       </div>
       {/* Remainders*/}
-      <div className="flex flex-row border  border-[#BDC0C2] rounded-full font-dm-sans items-center w-full max-w-[500px] mx-auto h-[150px]">
+      <div className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full max-w-[500px] mx-auto h-[150px]">
         <div className="flex-1 flex flex-col justify-center gap-1 p-4 ">
-          <p className="font-bold text-sm text-[#000] pl-6">Remainders</p>
+          <p className="font-bold text-sm text-[#000] pl-6">Reminders</p>
           <div className="list-disc ml-4 max-h-20 text-black overflow-y-auto">
             {remainders.map((reminder, index) => (
               <div
                 key={index}
-                className="bg-[#7ADBE0] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2"
+                className="bg-[#7ADBE0] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2 flex justify-between"
               >
                 {reminder}
+                <button onClick={() => handleRemainderDelete(reminder)}>Delete</button>
               </div>
             ))}
           </div>

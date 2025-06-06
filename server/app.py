@@ -7,7 +7,9 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+from flask_cors import CORS
+CORS(app) 
+
 
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 

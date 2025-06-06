@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import axios from "axios";
 
 const LoginSignup = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,48 +29,31 @@ const LoginSignup = () => {
     e.preventDefault();
 
     if (isLogin) {
-     
       if (!formData.email || !formData.password) {
         alert("Please enter email and password");
         return;
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
+        const res = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email: formData.email,
+          password: formData.password,
         });
-        const data = await res.json();
 
-        if (res.ok) {
+        if (res.status === 200) {
+          localStorage.setItem("email", formData.email); 
+          localStorage.setItem("isLoggedIn", "true");
           alert("Login successful!");
-          navigate("/dashboard");
-          
-        } else {
-          alert(data.message || "Login failed");
+          navigate("/dashboard"); // Redirect to dashboard
         }
       } catch (err) {
-        alert("Error logging in");
+        alert(err.response?.data?.message || "Login failed");
         console.error(err);
       }
     } else {
-      
-      const { name, email, password, confirmPassword, age, weight, height } =
-        formData;
+      const { name, email, password, confirmPassword, age, weight, height } = formData;
 
-      if (
-        !name ||
-        !email ||
-        !password ||
-        !confirmPassword ||
-        !age ||
-        !weight ||
-        !height
-      ) {
+      if (!name || !email || !password || !confirmPassword || !age || !weight || !height) {
         alert("Please fill all fields");
         return;
       }
@@ -81,37 +64,20 @@ const LoginSignup = () => {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/auth/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-            age,
-            weight,
-            height,
-          }),
+        const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
+          name, email, password, age, weight, height
         });
-        const data = await res.json();
 
-        if (res.ok) {
+        if (res.status === 200 || res.status === 201) {
           alert("Signup successful! Please login.");
           setIsLogin(true);
           setFormData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            age: "",
-            weight: "",
-            height: "",
+            name: "", email: "", password: "", confirmPassword: "",
+            age: "", weight: "", height: ""
           });
-        } else {
-          alert(data.message || "Signup failed");
         }
       } catch (err) {
-        alert("Error signing up");
+        alert(err.response?.data?.message || "Signup failed");
         console.error(err);
       }
     }

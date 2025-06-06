@@ -9,7 +9,7 @@ class User:
         data["password"] = generate_password_hash(data["password"])
         return self.collection.insert_one(data)
 
-    def find_by_email(self, email):
+    def get_user_details(self, email):
         return self.collection.find_one({"email": email})
 
     def verify_password(self, stored_password, provided_password):
@@ -19,4 +19,15 @@ class User:
         return self.collection.update_one(
             {"email": email},
             {"$set": updated_data}
+        )
+        
+    def add_reminder(self, email, reminder):
+        return self.collection.update_one(
+            {"email": email},
+            {"$push": {"reminders": reminder}}
+        )
+    def delete_reminder(self, email, reminder):
+        return self.collection.update_one(
+            {"email": email},
+            {"$pull": {"reminders": reminder}}
         )

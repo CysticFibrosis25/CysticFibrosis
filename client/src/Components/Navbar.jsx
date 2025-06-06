@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate(); // Add this line
   const isChatbot =
     window.location.pathname === "/chatbot" ||
     window.location.pathname === "/dashboard";
+
+  useEffect(() => {
+    const status = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(status === "true");
+  }, [window.location.pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    navigate("/login"); // Ensure navigation after logout
+  };
 
   return (
     <motion.div
@@ -62,32 +76,52 @@ const Navbar = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {["Home", "Dashboard", "Chatbot", "Login/Signup"].map(
-            (item, index) => {
-              let href = "/";
-              if (item === "Dashboard") href = "/dashboard";
-              else if (item === "Chatbot") href = "/chatbot";
-              else if (item === "Login/Signup") href = "/login";
-              return (
-                <motion.li
-                  key={item}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+          {["Home", "Dashboard", "Chatbot"].map((item, index) => {
+            let href = "/";
+            if (item === "Dashboard") href = "/dashboard";
+            else if (item === "Chatbot") href = "/chatbot";
+            return (
+              <motion.li
+                key={item}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+              >
+                <motion.a
+                  href={href}
+                  className={`hover:underline ${
+                    isChatbot ? "text-black" : "text-white"
+                  }`}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <motion.a
-                    href={href}
-                    className={`hover:underline ${
-                      isChatbot ? "text-black" : "text-white"
-                    }`}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    {item}
-                  </motion.a>
-                </motion.li>
-              );
-            }
+                  {item}
+                </motion.a>
+              </motion.li>
+            );
+          })}
+          {isLoggedIn ? (
+            <motion.li>
+              <button
+                onClick={handleLogout}
+                className={`hover:underline ${
+                  isChatbot ? "text-black" : "text-white"
+                }`}
+              >
+                Logout
+              </button>
+            </motion.li>
+          ) : (
+            <motion.li>
+              <a
+                href="/login"
+                className={`hover:underline ${
+                  isChatbot ? "text-black" : "text-white"
+                }`}
+              >
+                Login/Signup
+              </a>
+            </motion.li>
           )}
         </motion.ul>
       </nav>
@@ -96,7 +130,7 @@ const Navbar = () => {
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              className="absolute right-4 mt-2 w-40 rounded-4xl shadow-lg z-20  bg-white/50 backdrop-blur"
+              className="absolute right-4 mt-2 w-40 rounded-4xl shadow-lg z-20 bg-white/50 backdrop-blur"
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -107,7 +141,9 @@ const Navbar = () => {
                   { name: "Home", href: "/" },
                   { name: "Dashboard", href: "/dashboard" },
                   { name: "Chatbot", href: "/chatbot" },
-                  { name: "Login/Signup", href: "/login" },
+                  isLoggedIn
+                    ? { name: "Logout", href: "#", onClick: handleLogout }
+                    : { name: "Login/Signup", href: "/login" },
                 ].map((item, index) => (
                   <motion.li
                     key={item.name}
@@ -122,7 +158,10 @@ const Navbar = () => {
                           ? "text-black hover:bg-black/60"
                           : "text-black"
                       }`}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => {
+                        if (item.onClick) item.onClick();
+                        setMenuOpen(false);
+                      }}
                       whileHover={
                         isChatbot
                           ? { backgroundColor: "#222", x: 5 }
