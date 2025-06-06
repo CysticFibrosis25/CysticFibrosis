@@ -6,7 +6,7 @@ const Footer = () => {
       <p className="text-4xl ">
         BREATHE <span className="text-[#260AFF]">WELL</span>{" "}
       </p>
-      <div className="gap-4 opacity-80 flex md:flex-row flex-col mt-8 md:mt-0  items-center justify-center">
+      <div className="gap-4 opacity-80 flex md:flex-row flex-col mt-8 md:mt-0 items-center justify-center">
         <a href="/">Home</a>
         <a href="dashboard">Dashboard</a>
         <a href="chatbot">Chatbot</a>
