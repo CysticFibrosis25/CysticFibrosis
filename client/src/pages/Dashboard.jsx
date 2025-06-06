@@ -3,6 +3,7 @@ import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import Stats from "../Components/Dashboard/Stats";
 import { Healthtips2 } from "../Components/Healthtips2";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   return (
@@ -14,10 +15,16 @@ const Dashboard = () => {
         </p>
         <p className="text-sm">Let&apos;s help you thrive today!</p>
       </div>
-      <Userdetais />
-      <Stats />
-      <Healthtips2 />
-      <Footer />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <Userdetais />
+        <Stats />
+        <Healthtips2 />
+        <Footer />
+      </motion.div>
     </div>
   );
 };
