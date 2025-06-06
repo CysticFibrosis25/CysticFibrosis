@@ -17,7 +17,7 @@ const Userdetais = () => {
       if (!email) {
        console.error("Email is missing — user not logged in?");
         return;
-      } // Assuming you store email in localStorage after login
+      } 
       const response = await axios.get(`${API_BASE_URL}/auth/user/details?email=${email}`);
       setProfile(response.data);
       setRemainders(response.data.reminders);
