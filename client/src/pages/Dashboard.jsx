@@ -10,7 +10,6 @@ import { useState } from "react";
 import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
 
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [profile, setProfile]=useState({});
