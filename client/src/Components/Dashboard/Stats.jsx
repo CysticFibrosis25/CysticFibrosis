@@ -36,8 +36,8 @@ const Stats = () => {
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row font-dm-sans tracking-tight gap-2 md:gap-4 p-2 md:justify-center md:items-center">
-      <div className="w-full md:w-[320px] max-w-xs mx-auto md:mx-0 relative border border-[#7DE07A] bg-[#D0FFCF] rounded-3xl overflow-hidden flex-shrink-0">
+    <div className="w-full flex flex-col md:flex-row font-dm-sans tracking-tight gap-2 md:gap-2 p-2 md:justify-center items-center md:items-center">
+      <div className="w-full md:w-[320px] md:max-w-xs md:mx-0 relative border border-[#7DE07A] bg-[#D0FFCF] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/home/lungs1.png"
           alt="Lung Health"
@@ -58,7 +58,7 @@ const Stats = () => {
           </button>
         </div>
       </div>
-      <div className="w-full md:min-w-[380px] max-w-xs mx-auto md:mx-0 relative border border-[#E0DE7A] bg-[#FEFFCF] rounded-3xl overflow-hidden flex-shrink-0">
+      <div className="w-full md:min-w-[380px] md:max-w-xs relative border border-[#E0DE7A] bg-[#FEFFCF] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/dashboard/calories_1.png"
           alt="Calories"
@@ -76,7 +76,7 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="w-full md:w-[320px] max-w-xs mx-auto md:mx-0 relative border border-[#7ADEE0] bg-[#CFFFF9] rounded-3xl overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-[320px] md:max-w-xs relative border border-[#7ADEE0] bg-[#CFFFF9] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/dashboard/enzymes_1.png"
           alt="Lung Health"

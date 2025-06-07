@@ -127,7 +127,7 @@ const Userdetails = () => {
               <img
                 src="/dashboard/profile.jpeg"
                 alt="Profile"
-                className="md:w-32 md:h-32 w-28 h-28 rounded-full mx-auto object-cover"
+                className="md:w-32 md:h-32 w-24 h-24 rounded-full mx-auto object-cover"
               />
             </div>
             <div className="items-start justify-center flex-1 min-w-0">
@@ -143,7 +143,7 @@ const Userdetails = () => {
             </div>
             <div className="flex items-center justify-center pr-8 h-full">
               <button
-                className="bg-[#0A7CFF] text-white rounded-full font-semibold tracking-tight hover:bg-[#005DE0] transition duration-300 flex items-center justify-center h-[100px] w-8 text-2xl"
+                className="bg-[#0A7CFF] text-white rounded-full font-semibold tracking-tight hover:bg-[#005DE0] transition duration-300 flex items-center justify-center h-[80px] md:h-[100px] w-8 text-2xl"
                 style={{ minHeight: "2rem" }}
                 onClick={() => handleOpenModal("edit")}
               >
@@ -152,24 +152,29 @@ const Userdetails = () => {
             </div>
           </motion.div>
           <motion.div
-            className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full mx-auto h-[150px]"
+            className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full mx-auto h-[140px] md:h-[150px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <div className="flex-1 flex flex-col justify-center gap-1 px-4 ">
-              <p className="font-bold text-sm text-[#000] pl-6">Reminders</p>
-              <div className="list-disc ml-4 max-h-24 text-black overflow-y-auto">
+            <div className="flex-1 flex flex-col gap-1 px-2 ">
+              <p className="font-medium text-sm text-[#000] pl-10 mb-2 ">
+                Reminders ({remainders.length})
+              </p>
+              <div className="list-disc ml-4 max-h-20 text-black overflow-y-auto">
                 {remainders && remainders.length > 0 ? (
                   remainders.map((reminder, index) => (
                     <div
                       key={index}
-                      className="bg-[#7ADBE0] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2 flex justify-between"
+                      className="bg-[#c4ebf9] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2 flex justify-between"
                     >
                       {reminder}
-                      <button onClick={() => handleRemainderDelete(reminder)}>
+                      <button
+                        onClick={() => handleRemainderDelete(reminder)}
+                        className="bg-white/80 rounded-full items-center justify-center h-5 w-5"
+                      >
                         <DeleteIcon
-                          style={{ fontSize: 18, color: "#FF3131" }}
+                          style={{ fontSize: 14, color: "#FF3131" }}
                         />
                       </button>
                     </div>
