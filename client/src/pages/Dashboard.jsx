@@ -49,7 +49,17 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-full font-dm-sans flex flex-col">
+    <div
+      className="h-full font-dm-sans flex flex-col min-h-screen"
+      style={{
+        backgroundImage: `
+          repeating-linear-gradient(0deg, transparent, transparent 39px, #BDC0C230 39px, #BDC0C230 40px),
+          repeating-linear-gradient(90deg, transparent, transparent 39px, #BDC0C230 39px, #BDC0C230 40px)
+        `,
+        backgroundSize: "40px 40px",
+        backgroundColor: "#ffffff",
+      }}
+    >
       <Navbar />
       <div>
         {isLoading ? (

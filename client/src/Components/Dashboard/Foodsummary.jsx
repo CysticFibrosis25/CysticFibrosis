@@ -87,7 +87,7 @@ const Foodsummary = () => {
       <h2 className="text-2xl md:text-3xl font-medium text-center text-black font-dm-sans tracking-tighter">
         Food Summary
       </h2>
-      <div className="flex flex-col md:flex-row items-center justify-center p-4 font-dm-sans tracking-tight">
+      <div className="flex flex-col md:flex-row items-center backdrop-blur-lg justify-center p-4 font-dm-sans tracking-tight">
         <div className="flex flex-col border items-center border-gray-300 rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
           <p className="border-b text-center w-full mb-4 py-2 text-lg font-medium">
             Breakfast
@@ -116,7 +116,7 @@ const Foodsummary = () => {
           </div>
         </div>
 
-        <div className="flex flex-col border items-center border-gray-300 rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
+        <div className="flex flex-col border items-center border-gray-300 backdrop-blur-lg rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
           <p className="border-b text-center w-full mb-4 py-2 text-lg font-medium">
             Lunch
           </p>
@@ -144,7 +144,7 @@ const Foodsummary = () => {
           </div>
         </div>
 
-        <div className="flex flex-col border items-center border-gray-300 rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
+        <div className="flex flex-col border items-center border-gray-300 backdrop-blur-lg rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
           <p className="border-b text-center w-full mb-4 py-2 text-lg font-medium">
             Dinner
           </p>
@@ -172,7 +172,7 @@ const Foodsummary = () => {
           </div>
         </div>
 
-        <div className="flex flex-col border items-center border-gray-300 rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
+        <div className="flex flex-col border items-center border-gray-300 backdrop-blur-lg rounded-3xl p-4 m-2 min-w-[250px] w-full md:w-1/4 h-[400px]">
           <p className="border-b text-center w-full mb-4 py-2 text-lg font-medium">
             Snacks and Extras
           </p>

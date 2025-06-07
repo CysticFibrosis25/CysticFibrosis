@@ -106,7 +106,7 @@ const Userdetails = () => {
   };
 
   return (
-    <div className="w-[95%] md:w-[70%] flex md:flex-row flex-col gap-3 mx-auto mt-4 mb-2">
+    <div className="w-[95%] md:w-[70%] flex md:flex-row flex-col gap-2 mx-auto mt-4 mb-2">
       {isLoading ? (
         <div className="w-full flex justify-center items-center py-16">
           <div className="flex space-x-2">
@@ -118,12 +118,12 @@ const Userdetails = () => {
       ) : (
         <>
           <motion.div
-            className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full"
+            className="flex flex-row border border-[#BDC0C2] backdrop-blur-lg rounded-full font-dm-sans items-center w-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <div className="p-2 flex-shrink-0">
+            <div className="p-2 flex-shrink-0 ">
               <img
                 src="/dashboard/profile.jpeg"
                 alt="Profile"
@@ -136,8 +136,8 @@ const Userdetails = () => {
                 <p className="truncate w-full">{profile.email}</p>
                 <p className="truncate w-full">{profile.phone}</p>
                 <div className="flex flex-row items-center gap-4 w-full">
-                  <p>Age: {profile.age} yrs</p>
-                  <p>Weight: {profile.weight} kg</p>
+                  <p className="">Age: {profile.age} yrs</p>
+                  <p className="">Weight: {profile.weight} kg</p>
                 </div>
               </div>
             </div>
@@ -152,7 +152,7 @@ const Userdetails = () => {
             </div>
           </motion.div>
           <motion.div
-            className="flex flex-row border border-[#BDC0C2] rounded-full font-dm-sans items-center w-full mx-auto h-[140px] md:h-[150px]"
+            className="flex flex-row border border-[#BDC0C2] backdrop-blur-lg rounded-full font-dm-sans items-center w-full mx-auto h-[140px] md:h-[150px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -257,7 +257,7 @@ const Userdetails = () => {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="bg-[#0A7CFF] text-white rounded-full px-4 py-2 mt-2 hover:bg-[#005DE0] flex items-center justify-center"
+                  className="bg-gradient-to-r from-[#0A7CFF] to-[#260AFF] text-white rounded-full px-4 py-2 mt-2 hover:from-[#005DE0] hover:to-[#260AFF] flex items-center justify-center font-semibold shadow-md"
                 >
                   {isSaving ? (
                     <>
