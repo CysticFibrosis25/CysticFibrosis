@@ -4,7 +4,7 @@ import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { motion } from "framer-motion";
 
-const Userdetais = () => {
+const Userdetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [profile, setProfile] = useState({});
@@ -336,4 +336,4 @@ const Userdetais = () => {
   );
 };
 
-export default Userdetais;
+export default Userdetails;

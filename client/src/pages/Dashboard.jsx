@@ -1,4 +1,4 @@
-import Userdetais from "../Components/Dashboard/Userdetais";
+import Userdetais from "../Components/Dashboard/Userdetails";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import Stats from "../Components/Dashboard/Stats";
