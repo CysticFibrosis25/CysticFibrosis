@@ -37,7 +37,7 @@ const Stats = () => {
 
   return (
     <div className="w-full flex flex-col md:flex-row font-dm-sans tracking-tight gap-2 md:gap-2 p-2 md:justify-center items-center md:items-center">
-      <div className="w-full md:w-[320px] md:max-w-xs md:mx-0 relative border border-[#7DE07A] bg-[#D0FFCF] rounded-3xl overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-[320px] md:max-w-xs md:mx-0 relative border border-[#7DE07A] bg-gradient-to-br from-[#D0FFCF] to-[#d0ffcf60] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/home/lungs1.png"
           alt="Lung Health"
@@ -50,7 +50,7 @@ const Stats = () => {
             <p className="text-xs tracking-tighter">last checked 3 days ago</p>
           </div>
           <button
-            className="bg-[#058900] text-white cursor-pointer text-sm rounded-full px-4 py-2 mt-4 flex items-center gap-2"
+            className="bg-gradient-to-r from-[#058900] to-[#07bb01] text-white cursor-pointer text-sm rounded-full px-4 py-2 mt-4 flex items-center gap-2"
             onClick={handleOpenModal}
           >
             Check today&apos;s Health{" "}
@@ -58,7 +58,7 @@ const Stats = () => {
           </button>
         </div>
       </div>
-      <div className="w-full md:min-w-[380px] md:max-w-xs relative border border-[#E0DE7A] bg-[#FEFFCF] rounded-3xl overflow-hidden flex-shrink-0">
+      <div className="w-full md:min-w-[380px] md:max-w-xs relative border border-[#E0DE7A] bg-gradient-to-br from-[#FEFFCF] to-[#feffcf60] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/dashboard/calories_1.png"
           alt="Calories"
@@ -76,7 +76,7 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="w-full md:w-[320px] md:max-w-xs relative border border-[#7ADEE0] bg-[#CFFFF9] rounded-3xl overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-[320px] md:max-w-xs relative border border-[#7ADEE0] bg-gradient-to-br from-[#CFFFF9] to-[#cffff960] rounded-3xl overflow-hidden flex-shrink-0">
         <img
           src="/dashboard/enzymes_1.png"
           alt="Lung Health"
