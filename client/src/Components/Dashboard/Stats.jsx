@@ -94,8 +94,6 @@ const Stats = () => {
           </div>
         </div>
       </div>
-
-      {/* Modal for uploading lung x-ray */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-lg p-6 min-w-[320px] max-w-[90vw] flex flex-col items-center">
@@ -116,7 +114,7 @@ const Stats = () => {
             >
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,.zip,.rar,.7z"
                 className="hidden"
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -142,7 +140,7 @@ const Stats = () => {
                   upload
                 </span>
                 <span className="text-xs text-gray-400 mt-1">
-                  JPG, PNG, or JPEG (max 10MB)
+                  JPG, PNG, JPEG, ZIP, RAR, 7Z (max 10MB)
                 </span>
               </div>
             </div>
