@@ -86,6 +86,7 @@ const Userdetais = () => {
             <div className="flex flex-row items-center gap-4 w-full">
               <p>Age: {profile.age}</p>
               <p>Weight: {profile.weight}</p>
+              <p>Sex: {profile.sex}</p>
             </div>
           </div>
         </div>
@@ -180,6 +181,17 @@ const Userdetais = () => {
                     value={editProfile.weight}
                     onChange={handleProfileChange}
                   />
+                  <select
+                  className="border rounded-full px-3 py-2"
+                  name="sex"
+                  value={editProfile.sex || ""}
+                  onChange={handleProfileChange}
+                  > 
+                  <option value="">Select Sex</option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  </select>
+
                 </div>
                 <button
                   type="submit"

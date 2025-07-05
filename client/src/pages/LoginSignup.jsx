@@ -18,6 +18,7 @@ const LoginSignup = () => {
     age: "",
     weight: "",
     height: "",
+    sex:"",
   });
 
   const handleChange = (e) => {
@@ -51,9 +52,9 @@ const LoginSignup = () => {
         console.error(err);
       }
     } else {
-      const { name, email, password, confirmPassword, age, weight, height } = formData;
+      const { name, email, password, confirmPassword, age, weight, height, sex } = formData;
 
-      if (!name || !email || !password || !confirmPassword || !age || !weight || !height) {
+      if (!name || !email || !password || !confirmPassword || !age || !weight || !height ||!sex) {
         alert("Please fill all fields");
         return;
       }
@@ -65,7 +66,7 @@ const LoginSignup = () => {
 
       try {
         const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-          name, email, password, age, weight, height
+          name, email, password, age, weight, height, sex
         });
 
         if (res.status === 200 || res.status === 201) {
@@ -73,7 +74,7 @@ const LoginSignup = () => {
           setIsLogin(true);
           setFormData({
             name: "", email: "", password: "", confirmPassword: "",
-            age: "", weight: "", height: ""
+            age: "", weight: "", height: "", sex: ""
           });
         }
       } catch (err) {
@@ -136,6 +137,18 @@ const LoginSignup = () => {
                     className="input"
                     required
                   />
+                  <select
+                  name="sex"
+                  value={formData.sex}
+                  onChange={handleChange}
+                  className="input"
+                  required
+                >
+                <option value="">Select Sex</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                </select>
+                <br/>
                 </>
               )}
               <input
