@@ -8,7 +8,7 @@ const Healthtips = () => {
         <img
           src="/home/cloud2.png"
           alt="Health Tips"
-          className="w-full h-[30vh] object-cover mb-4"
+          className="w-full h-[40vh] object-cover mb-4"
         />
         <div className="absolute top-12 items-center text-sm md:text-lg left-1/2 transform -translate-x-1/2 text-white text-center leading-tight tracking-tight">
           <p>
