@@ -138,6 +138,7 @@ const Userdetails = () => {
                 <div className="flex flex-row items-center gap-4 w-full">
                   <p className="">Age: {profile.age} yrs</p>
                   <p className="">Weight: {profile.weight} kg</p>
+                  <p className="">Sex: {profile.sex}</p>
                 </div>
               </div>
             </div>

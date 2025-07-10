@@ -12,3 +12,9 @@ pymongo==4.13.0
 python-dotenv==1.1.0
 Werkzeug==3.1.3
 gunicorn
+pydicom==2.3.1
+torch==2.2.2
+torchvision==0.17.2
+numpy==1.26.4
+opencv-python==4.10.0.84
+

@@ -32,6 +32,7 @@ def login():
             "name": user["name"],
             "email": user["email"],
             "age": user["age"],
+            "sex":user["sex"],
             "height": user["height"],
             "weight": user["weight"]
         }
@@ -46,6 +47,8 @@ def get_user_details():
     return jsonify({
         "name": user["name"],
         "email": user["email"],
+        "sex":user["sex"],
+        "phone": user["phone"],
         "age": user["age"],
         "height": user["height"],
         "weight": user["weight"],

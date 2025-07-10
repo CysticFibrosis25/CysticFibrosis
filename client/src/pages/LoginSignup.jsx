@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar";
 import axios from "axios";
 
 const LoginSignup = () => {
-  const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
+  const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
