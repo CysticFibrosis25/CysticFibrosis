@@ -166,6 +166,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { predictFVC, fetchFVCGraphHistory } from "../../services/predictionService";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
 import {
   Chart,
   LineElement,

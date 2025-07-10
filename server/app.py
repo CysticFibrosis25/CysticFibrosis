@@ -12,7 +12,8 @@ load_dotenv()
 
 app = Flask(__name__)
 from flask_cors import CORS
-CORS(app, supports_credentials=True) 
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
 
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
