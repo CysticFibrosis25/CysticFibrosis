@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const LoginSignup = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -33,7 +34,7 @@ const LoginSignup = () => {
 
     if (isLogin) {
       if (!formData.email || !formData.password) {
-        alert("Please enter email and password");
+        toast.error("Please enter email and password");
         return;
       }
 
@@ -47,13 +48,13 @@ const LoginSignup = () => {
         if (res.status === 200) {
           localStorage.setItem("email", formData.email);
           localStorage.setItem("isLoggedIn", "true");
-          alert("Login successful!");
+          toast.success("Login successful!");
           setLogging(false);
           navigate("/dashboard");
         }
       } catch (err) {
         setLogging(false);
-        alert(err.response?.data?.message || "Login failed");
+        toast.error(err.response?.data?.message || "Login failed");
         console.error(err);
       }
     } else {
@@ -83,12 +84,12 @@ const LoginSignup = () => {
       }
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        toast.error("Passwords do not match");
         return;
       }
 
       try {
-        setLogging(true);
+        setSignup(true);
         const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
           name,
           email,
@@ -100,9 +101,8 @@ const LoginSignup = () => {
         });
 
         if (res.status === 200 || res.status === 201) {
-          alert("Signup successful! Please login.");
-          setIsLogin(true);
-          setLogging(false);
+          toast.success("Signup successful! Please login.");
+          setSignup(false);
           setFormData({
             name: "",
             email: "",
@@ -116,6 +116,8 @@ const LoginSignup = () => {
         }
       } catch (err) {
         alert(err.response?.data?.message || "Signup failed");
+        toast.error(err.response?.data?.message || "Signup failed");
+        setSignup(false);
         console.error(err);
       }
     }
