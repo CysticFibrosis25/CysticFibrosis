@@ -1,98 +1,118 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hi! How can I help you today?" },
-  ]);
+  const navigate = useNavigate();
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [user, setUser ] = useState(null);
   const chatEndRef = useRef(null);
-  const isFirstRender = useRef(true);
+
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const email = localStorage.getItem("email");
+
+  const formatResponse = (responseText) => {
+    let formattedText = responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formattedText = formattedText.replace(/\n/g, '<br/>');
+    formattedText = `<p>${formattedText}</p>`;
+    
+    return formattedText;
+  };
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (!isLoggedIn) {
+      navigate("/login");
       return;
     }
+
+    axios
+      .get(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/auth/user/details`, {
+        params: { email },
+      })
+      .then((res) => {
+        setUser (res.data);
+        return axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat/history`, { email });
+      })
+      .then((res) => {
+        setMessages(res.data.history || []);
+      })
+      .catch((err) => {
+        console.error("User /chat error:", err);
+        navigate("/login");
+      });
+  }, [isLoggedIn, email, navigate]);
+
+  useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
-    setMessages((msgs) => [
-      ...msgs,
-      { sender: "user", text: input },
-      // Simulate
-      { sender: "bot", text: "I'm here to support you! (Demo reply)" },
-    ]);
+    if (!input.trim() || !user) return;
+
+    const updated = [...messages, { sender: "user", text: input }];
+    setMessages(updated);
     setInput("");
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat`,
+        { user, history: updated }
+      );
+
+      // Format the bot's reply
+      const formattedReply = formatResponse(res.data.reply);
+      setMessages([...updated, { sender: "bot", text: formattedReply }]);
+    } catch (err) {
+      console.error("Chat error", err);
+      const errorText = err?.response?.data?.error || "Something went wrong.";
+      setMessages([...updated, { sender: "bot", text: errorText }]);
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div className="h-full relative font-dm-sans flex flex-col">
+      <div className="h-full font-dm-sans flex flex-col">
         <div className="flex-1 flex flex-col items-center justify-center pt-2 pb-4">
           <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh]">
-            {/* <div className="flex items-center justify-center gap-1 px-6 py-4 ">
-              <img src="/home/chatbot.png" alt="Chatbot" className="w-6 h-6 " />
-
-              <span className="md:text-md text-md font-medium px-1 py-2 rounded-full text-[#0A7CFF] tracking-tight">
-                CF Chatbot
-              </span>
-            </div> */}
-            <div className="flex-1 overflow-y-auto px-4 py-2 md:space-y-4 space-y-2">
+            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`rounded-2xl px-4 py-2 max-w-[75%] text-sm md:text-base font-medium tracking-tight "
-                    ${
+                    className={`rounded-2xl px-4 py-2 max-w-[75%] text-sm font-medium ${
                       msg.sender === "user"
                         ? "bg-[#0A7CFF] text-white rounded-br-none"
-                        : "bg-white/90 text-[#000]  "
+                        : "bg-white/90 text-black"
                     }`}
-                  >
-                    <div className="flex flex-row items-center gap-3">
-                      {msg.sender === "bot" ? (
-                        <div className="bg-blue-400 h-4 w-4 rounded-full "></div>
-                      ) : null}
-                      <div className="max-w-[150px] md:max-w-[2750px]">
-                        {msg.text}
-                      </div>
-                    </div>
-                  </div>
+                    dangerouslySetInnerHTML={{ __html: msg.text }}  // Render HTML
+                  />
                 </div>
               ))}
               <div ref={chatEndRef} />
             </div>
-            <form
-              onSubmit={handleSend}
-              className="flex items-center gap-2 px-4 py-3 border-t border-[#0A7CFF]/10 bg-white/60 rounded-b-2xl"
-            >
+            <form onSubmit={handleSend} className="flex items-center gap-2 px-4 py-3 bg-white/60 border-t">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0A7CFF] bg-white/80 placeholder-gray-400 text-sm"
+                className="flex-1 px-4 py-2 rounded-full border focus:ring-2 focus:ring-[#0A7CFF] bg-white/80 text-sm"
               />
-              <button
-                type="submit"
-                className="bg-[#0A7CFF] hover:bg-[#095ec2] text-white font-semibold px-5 py-2 rounded-full shadow transition-all duration-200"
-              >
+              <button type="submit" className="bg-[#0A7CFF] text-white font-semibold px-5 py-2 rounded-full">
                 Send
               </button>
             </form>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
