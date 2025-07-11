@@ -10,6 +10,7 @@ const LoginSignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [logging, setLogging] = useState(false);
+  const [signup, setSignup] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -87,6 +88,7 @@ const LoginSignup = () => {
       }
 
       try {
+        setLogging(true);
         const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
           name,
           email,
@@ -100,6 +102,7 @@ const LoginSignup = () => {
         if (res.status === 200 || res.status === 201) {
           alert("Signup successful! Please login.");
           setIsLogin(true);
+          setLogging(false);
           setFormData({
             name: "",
             email: "",
@@ -233,7 +236,7 @@ const LoginSignup = () => {
                 </div>
               )}
 
-              {logging ? (
+              {logging || signup ? (
                 <div className="flex justify-center mt-4">
                   <div
                     className="inline-block w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
