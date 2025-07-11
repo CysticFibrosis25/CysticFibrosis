@@ -9,6 +9,7 @@ const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [logging, setLogging] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,7 +19,7 @@ const LoginSignup = () => {
     age: "",
     weight: "",
     height: "",
-    sex:"",
+    sex: "",
   });
 
   const handleChange = (e) => {
@@ -36,25 +37,46 @@ const LoginSignup = () => {
       }
 
       try {
+        setLogging(true);
         const res = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
 
         if (res.status === 200) {
-          localStorage.setItem("email", formData.email); 
+          localStorage.setItem("email", formData.email);
           localStorage.setItem("isLoggedIn", "true");
           alert("Login successful!");
-          navigate("/dashboard"); // Redirect to dashboard
+          setLogging(false);
+          navigate("/dashboard");
         }
       } catch (err) {
+        setLogging(false);
         alert(err.response?.data?.message || "Login failed");
         console.error(err);
       }
     } else {
-      const { name, email, password, confirmPassword, age, weight, height, sex } = formData;
+      const {
+        name,
+        email,
+        password,
+        confirmPassword,
+        age,
+        weight,
+        height,
+        sex,
+      } = formData;
 
-      if (!name || !email || !password || !confirmPassword || !age || !weight || !height ||!sex) {
+      if (
+        !name ||
+        !email ||
+        !password ||
+        !confirmPassword ||
+        !age ||
+        !weight ||
+        !height ||
+        !sex
+      ) {
         alert("Please fill all fields");
         return;
       }
@@ -66,15 +88,27 @@ const LoginSignup = () => {
 
       try {
         const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-          name, email, password, age, weight, height, sex
+          name,
+          email,
+          password,
+          age,
+          weight,
+          height,
+          sex,
         });
 
         if (res.status === 200 || res.status === 201) {
           alert("Signup successful! Please login.");
           setIsLogin(true);
           setFormData({
-            name: "", email: "", password: "", confirmPassword: "",
-            age: "", weight: "", height: "", sex: ""
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            age: "",
+            weight: "",
+            height: "",
+            sex: "",
           });
         }
       } catch (err) {
@@ -138,17 +172,17 @@ const LoginSignup = () => {
                     required
                   />
                   <select
-                  name="sex"
-                  value={formData.sex}
-                  onChange={handleChange}
-                  className="input"
-                  required
-                >
-                <option value="">Select Sex</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                </select>
-                <br/>
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleChange}
+                    className="input"
+                    required
+                  >
+                    <option value="">Select Sex</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <br />
                 </>
               )}
               <input
@@ -199,19 +233,28 @@ const LoginSignup = () => {
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold"
-              >
-                {isLogin ? "Login" : "Signup"}
-              </button>
+              {logging ? (
+                <div className="flex justify-center mt-4">
+                  <div
+                    className="inline-block w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                    role="status"
+                  ></div>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 cursor-pointer text-white py-2 rounded-md font-semibold"
+                >
+                  {isLogin ? "Login" : "Signup"}
+                </button>
+              )}
             </form>
 
             <p className="mt-4 text-center text-gray-700">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
                 onClick={() => setIsLogin((prev) => !prev)}
-                className="text-blue-600 font-semibold"
+                className="text-blue-600 cursor-pointer font-semibold"
               >
                 {isLogin ? "Signup" : "Login"}
               </button>
