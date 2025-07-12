@@ -111,7 +111,6 @@ const LoginSignup = () => {
           navigate("/moreinfo");
         }
       } catch (err) {
-        alert(err.response?.data?.message || "Signup failed");
         toast.error(err.response?.data?.message || "Signup failed");
         setSignup(false);
         console.error(err);

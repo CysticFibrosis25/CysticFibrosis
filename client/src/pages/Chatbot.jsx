@@ -21,7 +21,6 @@ const Chatbot = () => {
     );
     formattedText = formattedText.replace(/\n/g, "<br/>");
     formattedText = `<p>${formattedText}</p>`;
-
     return formattedText;
   };
 
@@ -75,7 +74,6 @@ const Chatbot = () => {
         { user, history: updated }
       );
 
-      // Format the bot's reply
       const formattedReply = formatResponse(res.data.reply);
       setMessages([...updated, { sender: "bot", text: formattedReply }]);
     } catch (err) {
@@ -88,10 +86,10 @@ const Chatbot = () => {
   return (
     <>
       <Navbar />
-      <div className="h-full font-dm-sans flex flex-col">
+      <div className="h-full font-dm-sans flex flex-col bg-[#F3F7FF]">
         <div className="flex-1 flex flex-col items-center justify-center pt-2 pb-4">
-          <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh]">
-            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+          <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh] bg-white shadow-md rounded-xl overflow-hidden">
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
@@ -103,24 +101,25 @@ const Chatbot = () => {
                     className={`rounded-2xl px-4 py-2 max-w-[75%] text-sm font-medium ${
                       msg.sender === "user"
                         ? "bg-[#0A7CFF] text-white rounded-br-none"
-                        : "bg-white/90 text-black"
+                        : "bg-[#D2E3FC] text-black rounded-bl-none"
                     }`}
-                    dangerouslySetInnerHTML={{ __html: msg.text }} // Render HTML
+                    dangerouslySetInnerHTML={{ __html: msg.text }}
                   />
                 </div>
               ))}
               <div ref={chatEndRef} />
             </div>
+
             <form
               onSubmit={handleSend}
-              className="flex items-center gap-2 px-4 py-3 bg-white/60 border-t"
+              className="flex items-center gap-2 px-4 py-3 bg-white border-t"
             >
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 px-4 py-2 rounded-full border focus:ring-2 focus:ring-[#0A7CFF] bg-white/80 text-sm"
+                className="flex-1 px-4 py-2 rounded-full border focus:ring-2 focus:ring-[#0A7CFF] bg-white text-sm"
               />
               <button
                 type="submit"
@@ -138,3 +137,4 @@ const Chatbot = () => {
 };
 
 export default Chatbot;
+

@@ -13,6 +13,8 @@ const Userdetails = () => {
   const [newRemainder, setNewRemainder] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+
   const API_BASE_URL =
     import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
 
@@ -124,11 +126,17 @@ const Userdetails = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="p-2 flex-shrink-0 ">
-              <img
-                src="/dashboard/profile.jpeg"
-                alt="Profile"
-                className="md:w-32 md:h-32 w-24 h-24 rounded-full mx-auto object-cover"
-              />
+            <img
+             src={
+            profile?.profile_image
+            ? `data:image/jpeg;base64,${profile.profile_image}`
+            : "dashboard/default-user.png"
+            }
+  alt="User Profile"
+  className="md:w-32 md:h-32 w-24 h-24 rounded-full mx-auto object-cover"
+/>
+
+
             </div>
             <div className="items-start justify-center flex-1 min-w-0">
               <div className="flex flex-col items-start justify-center text-xs md:text-sm font-medium tracking-tighter gap-2 p-4 min-w-0">
@@ -218,6 +226,23 @@ const Userdetails = () => {
                 className="flex flex-col gap-3"
                 onSubmit={handleProfileSave}
               >
+                <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                  // Store only base64 content after comma
+                setEditProfile({ ...editProfile, profile_image: reader.result.split(',')[1] });
+              };
+              reader.readAsDataURL(file);
+            }
+            }}
+            />
+
+
                 <input
                   className="border rounded-full px-3 py-2"
                   placeholder="Name"

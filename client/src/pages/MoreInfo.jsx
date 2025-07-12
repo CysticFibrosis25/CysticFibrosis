@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import { toast } from "react-toastify";
 
 const MoreInfo = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -74,11 +75,11 @@ const MoreInfo = () => {
 
     try {
       await axios.put(`${API_BASE_URL}/auth/user/update`, payload);
-      alert("Info saved successfully!");
+      toast.success("Onboarding Info added successfully! Please login.");
       localStorage.clear();
       navigate("/login");
     } catch (err) {
-      alert("Failed to save info.");
+      toast.error("Failed to update information. Please try again.");
       console.error(err);
     }
   };
