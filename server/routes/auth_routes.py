@@ -53,6 +53,7 @@ def get_user_details():
         "age": user["age"],
         "height": user["height"],
         "weight": user["weight"],
+        "profile_image": user.get("profile_image", ""),
         "reminders": user.get("reminders", []),
         "cf_type": user["cf_type"],
             "dob": user["dob"],

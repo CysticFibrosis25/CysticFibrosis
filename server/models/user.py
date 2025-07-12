@@ -16,10 +16,15 @@ class User:
         return check_password_hash(stored_password, provided_password)
 
     def update_user(self, email, updated_data):
-        return self.collection.update_one(
-            {"email": email},
-            {"$set": updated_data}
-        )
+        query = {"email": email}
+        update_fields = updated_data.copy()
+
+    # Only include profile_image if it's not empty or null
+        if "profile_image" in update_fields and not update_fields["profile_image"]:
+            update_fields.pop("profile_image")
+
+        return self.collection.update_one(query, {"$set": update_fields})
+
         
     def add_reminder(self, email, reminder):
         return self.collection.update_one(
