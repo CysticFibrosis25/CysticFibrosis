@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const LoginSignup = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -9,6 +10,8 @@ const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [logging, setLogging] = useState(false);
+  const [signup, setSignup] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,7 +22,7 @@ const LoginSignup = () => {
     age: "",
     weight: "",
     height: "",
-    sex:"",
+    sex: "",
   });
 
   const handleChange = (e) => {
@@ -32,56 +35,89 @@ const LoginSignup = () => {
 
     if (isLogin) {
       if (!formData.email || !formData.password) {
-        alert("Please enter email and password");
+        toast.error("Please enter email and password");
         return;
       }
 
       try {
+        setLogging(true);
         const res = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
 
         if (res.status === 200) {
-          localStorage.setItem("email", formData.email); 
+          localStorage.setItem("email", formData.email);
           localStorage.setItem("isLoggedIn", "true");
-          alert("Login successful!");
-          navigate("/dashboard"); // Redirect to dashboard
+          toast.success("Login successful!");
+          setLogging(false);
+          navigate("/dashboard");
         }
       } catch (err) {
-        alert(err.response?.data?.message || "Login failed");
+        setLogging(false);
+        toast.error(err.response?.data?.message || "Login failed");
         console.error(err);
       }
     } else {
       const { name, phone, email, password, confirmPassword, age, weight, height, sex } = formData;
 
-      if (!name || !phone || !email || !password || !confirmPassword || !age || !weight || !height ||!sex) {
+      if (
+        !name || !phone ||
+        !email ||
+        !password ||
+        !confirmPassword ||
+        !age ||
+        !weight ||
+        !height ||
+        !sex
+      ) {
         alert("Please fill all fields");
         return;
       }
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        toast.error("Passwords do not match");
         return;
       }
 
       try {
+        setSignup(true);
   const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-    name, phone, email, password, age, weight, height, sex
+    name, phone,
+          email,
+          password,
+          age,
+          weight,
+          height,
+          sex,
   });
 
-  if (res.status === 200 || res.status === 201) {
-    localStorage.setItem("email", email);
-    localStorage.setItem("isLoggedIn", "true");
-    alert("Signup successful! Please fill more info.");
-    navigate("/moreinfo");  // <-- REDIRECT
-  }
-} catch (err) {
-  alert(err.response?.data?.message || "Signup failed");
-  console.error(err);
-}
-  }
-};
+        if (res.status === 200 || res.status === 201) {
+           localStorage.setItem("email", email);
+          localStorage.setItem("isLoggedIn", "true");
+          toast.success("Signup successful! Please login.");
+          setSignup(false);
+            
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            age: "",
+            weight: "",
+            height: "",
+            sex: "",
+          });
+          navigate("/moreinfo");
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || "Signup failed");
+        toast.error(err.response?.data?.message || "Signup failed");
+        setSignup(false);
+        console.error(err);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen relative font-dm-sans tracking-tight">
@@ -146,17 +182,17 @@ const LoginSignup = () => {
                     required
                   />
                   <select
-                  name="sex"
-                  value={formData.sex}
-                  onChange={handleChange}
-                  className="input"
-                  required
-                >
-                <option value="">Select Sex</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                </select>
-                <br/>
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleChange}
+                    className="input"
+                    required
+                  >
+                    <option value="">Select Sex</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <br />
                 </>
               )}
               <input
@@ -207,19 +243,28 @@ const LoginSignup = () => {
                 </div>
               )}
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold"
-              >
-                {isLogin ? "Login" : "Signup"}
-              </button>
+              {logging || signup ? (
+                <div className="flex justify-center mt-4">
+                  <div
+                    className="inline-block w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+                    role="status"
+                  ></div>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 cursor-pointer text-white py-2 rounded-md font-semibold"
+                >
+                  {isLogin ? "Login" : "Signup"}
+                </button>
+              )}
             </form>
 
             <p className="mt-4 text-center text-gray-700">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
                 onClick={() => setIsLogin((prev) => !prev)}
-                className="text-blue-600 font-semibold"
+                className="text-blue-600 cursor-pointer font-semibold"
               >
                 {isLogin ? "Signup" : "Login"}
               </button>

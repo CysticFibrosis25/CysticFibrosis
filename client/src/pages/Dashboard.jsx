@@ -12,6 +12,7 @@ import axios from "axios";
 const API_BASE_URL =
   import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
 import Foodsummary from "../Components/Dashboard/Foodsummary";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Dashboard = () => {
         const email = localStorage.getItem("email");
         if (!email) {
           console.error("Email is missing — user not logged in?");
+          setIsLoading(false);
           return;
         }
         const response = await axios.get(
@@ -40,7 +42,8 @@ const Dashboard = () => {
         setProfile(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        alert("Failed to fetch user data. Please try again later.");
+        if (!isLoading)
+          toast.error("Failed to fetch user data. Please try again later.");
       } finally {
         setIsLoading(false);
       }

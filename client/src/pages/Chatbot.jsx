@@ -8,22 +8,25 @@ const Chatbot = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [user, setUser ] = useState(null);
+  const [user, setUser] = useState(null);
   const chatEndRef = useRef(null);
 
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const email = localStorage.getItem("email");
 
   const formatResponse = (responseText) => {
-    let formattedText = responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    formattedText = formattedText.replace(/\n/g, '<br/>');
+    let formattedText = responseText.replace(
+      /\*\*(.*?)\*\*/g,
+      "<strong>$1</strong>"
+    );
+    formattedText = formattedText.replace(/\n/g, "<br/>");
     formattedText = `<p>${formattedText}</p>`;
-    
+
     return formattedText;
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !email) {
       navigate("/login");
       return;
     }
@@ -33,15 +36,24 @@ const Chatbot = () => {
         params: { email },
       })
       .then((res) => {
-        setUser (res.data);
-        return axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat/history`, { email });
+        setUser(res.data);
+        return axios.post(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat/history`,
+          { email }
+        );
       })
       .then((res) => {
         setMessages(res.data.history || []);
       })
       .catch((err) => {
         console.error("User /chat error:", err);
-        navigate("/login");
+
+        if (
+          err.response &&
+          (err.response.status === 401 || err.response.status === 403)
+        ) {
+          navigate("/login");
+        }
       });
   }, [isLoggedIn, email, navigate]);
 
@@ -83,7 +95,9 @@ const Chatbot = () => {
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
-                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
                     className={`rounded-2xl px-4 py-2 max-w-[75%] text-sm font-medium ${
@@ -91,13 +105,16 @@ const Chatbot = () => {
                         ? "bg-[#0A7CFF] text-white rounded-br-none"
                         : "bg-white/90 text-black"
                     }`}
-                    dangerouslySetInnerHTML={{ __html: msg.text }}  // Render HTML
+                    dangerouslySetInnerHTML={{ __html: msg.text }} // Render HTML
                   />
                 </div>
               ))}
               <div ref={chatEndRef} />
             </div>
-            <form onSubmit={handleSend} className="flex items-center gap-2 px-4 py-3 bg-white/60 border-t">
+            <form
+              onSubmit={handleSend}
+              className="flex items-center gap-2 px-4 py-3 bg-white/60 border-t"
+            >
               <input
                 type="text"
                 value={input}
@@ -105,7 +122,10 @@ const Chatbot = () => {
                 placeholder="Type your message..."
                 className="flex-1 px-4 py-2 rounded-full border focus:ring-2 focus:ring-[#0A7CFF] bg-white/80 text-sm"
               />
-              <button type="submit" className="bg-[#0A7CFF] text-white font-semibold px-5 py-2 rounded-full">
+              <button
+                type="submit"
+                className="bg-[#0A7CFF] text-white font-semibold px-5 py-2 rounded-full"
+              >
                 Send
               </button>
             </form>
