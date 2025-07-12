@@ -277,6 +277,9 @@ const Stats = () => {
       projectedFVCs.push(Math.max(0, lastFVC + slope * i));
     }
 
+  
+
+
     return {
       labels: projectedLabels,
       datasets: [
@@ -337,6 +340,39 @@ const Stats = () => {
       },
     },
   },
+};
+
+const renderFormattedMessage = (msg) => {
+  if (!msg) return null;
+
+  const lines = msg.split("\n").filter(line => line.trim() !== "");
+  return lines.map((line, i) => {
+    if (line.startsWith("🌟") || line.startsWith("🔄") || line.startsWith("⚠️")) {
+      return (
+        <h3 key={i} className="text-lg font-semibold text-[#0A7CFF] mt-4">
+          {line}
+        </h3>
+      );
+    } else if (line.startsWith("🩺") || line.startsWith("🫁") || line.startsWith("🚨")) {
+      return (
+        <h4 key={i} className="text-base font-semibold mt-3">
+          {line}
+        </h4>
+      );
+    } else if (line.startsWith("-")) {
+      return (
+        <li key={i} className="ml-6 list-disc text-sm text-gray-700">
+          {line.slice(1).trim()}
+        </li>
+      );
+    } else {
+      return (
+        <p key={i} className="text-sm text-gray-800 mt-2">
+          {line}
+        </p>
+      );
+    }
+  });
 };
 
   return (
@@ -404,17 +440,20 @@ const Stats = () => {
       {history.length > 0 ? (
         <div className="w-full max-w-4xl mt-6">
           <Line data={generateChartData()} options={chartOptions} />
-          <div className="mt-4 text-center text-sm">
-            <p>
-              <strong>Summary:</strong>{" "}
-              {result?.message || "You’re currently stable. Track regularly for updates."}
-            </p>
-            {criticalWeek !== null && (
-              <p className="text-red-500 mt-1">
-                ⚠️ Estimated time to reach 1000 mL: <strong>{criticalWeek} weeks</strong>
-              </p>
-            )}
-          </div>
+          <div className="mt-6 p-4 border border-gray-300 rounded-xl bg-white w-full max-w-4xl">
+  <h3 className="text-lg font-bold text-[#0A7CFF] mb-2">📋 Lung Health Report</h3>
+  {result?.message ? (
+    <div className="space-y-1">{renderFormattedMessage(result.message)}</div>
+  ) : (
+    <p className="text-gray-500">You’re currently stable. Track regularly for updates.</p>
+  )}
+  {criticalWeek !== null && (
+    <p className="text-red-500 mt-4 font-medium">
+      ⚠️ Estimated time to reach 1000 mL: <strong>{criticalWeek} weeks</strong>
+    </p>
+  )}
+</div>
+
         </div>
       ) : (
         <div className="mt-8 text-center text-gray-500 text-sm">

@@ -31,10 +31,11 @@ def login():
         "user": {
             "name": user["name"],
             "email": user["email"],
+            "phone": user["phone"],
             "age": user["age"],
             "sex":user["sex"],
             "height": user["height"],
-            "weight": user["weight"]
+            "weight": user["weight"],
         }
     }), 200
     
@@ -52,7 +53,15 @@ def get_user_details():
         "age": user["age"],
         "height": user["height"],
         "weight": user["weight"],
-        "reminders": user.get("reminders", [])
+        "reminders": user.get("reminders", []),
+        "cf_type": user["cf_type"],
+            "dob": user["dob"],
+            "lung_transplant": user["lung_transplant"],
+            "symptoms": user["symptoms"],
+            "other_conditions": user["other_conditions"],
+            "medications": user["medications"],
+            "allergies": user["allergies"],
+            "emergency_contact":user.get("emergency_contact", {})
     }), 200
 
 @auth_bp.route('/user/update', methods=['PUT'])

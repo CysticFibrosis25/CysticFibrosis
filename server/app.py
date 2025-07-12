@@ -3,7 +3,6 @@ from flask_cors import CORS
 from routes.auth_routes import auth_bp
 from dotenv import load_dotenv
 import os
-# Add at the top:
 from routes.prediction_routes import pred_bp
 from routes.chatbot_routes import chatbot
 

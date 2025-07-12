@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from ml.modal.ct import load_dicom_images_3d  # Adjusted import path
+from ml.modal.ct import load_dicom_images_3d  
 from ml.modal.fibronet import FibroNet
 from ml.config import CFG
 
@@ -22,24 +22,45 @@ def preprocess_volume(volume):
         raise ValueError(f"Preprocessing failed: {str(e)}")
 
 def generate_health_message(slope):
-    """Creates patient-friendly output"""
-    if slope > -30:
+    if slope > -5:
         return (f"🌟 Great news! Your lungs are showing only mild changes ({slope:.1f} mL/week). "
-                "This suggests your current treatment plan is effective. Keep up with your regular "
-                "exercise and medications.")
-    elif -50 <= slope <= -30:
+                "This suggests your current treatment plan is effective. Keep up with your regular exercise, "
+                "hydration, and medications.\n\n"
+                "🫁 Tips:\n"
+                "- Maintain a balanced diet rich in antioxidants (like fruits and veggies).\n"
+                "- Continue regular breathing exercises to support lung capacity.\n"
+                "- Attend follow-up appointments as scheduled.\n"
+                "- Track symptoms like coughing or fatigue to report to your doctor.\n"
+                "- Avoid exposure to air pollutants and secondhand smoke.")
+
+    elif -10 <= slope <= -5:
         return (f"🔄 Your lung function is declining moderately ({slope:.1f} mL/week). "
-                "Consider discussing medication adjustments with your doctor. Daily breathing exercises "
-                "may help slow progression.")
+                "This may indicate early progression. It's a good time to review your care plan.\n\n"
+                "🩺 Recommendations:\n"
+                "- Discuss medication adjustments or inhalation therapy options with your doctor.\n"
+                "- Increase focus on airway clearance techniques (e.g., chest physiotherapy).\n"
+                "- Use a peak flow meter regularly to monitor lung strength.\n"
+                "- Make sure vaccinations are up-to-date (flu, pneumonia, etc).\n"
+                "- Minimize stress and prioritize rest and hydration.")
+
     else:
-        return (f"⚠️ Significant decline detected ({slope:.1f} mL/week). Please schedule an appointment "
-                "with your care team immediately. New therapies may help stabilize your function.")
+        return (f"⚠️ Significant decline detected ({slope:.1f} mL/week). This is a concerning rate of lung function loss. "
+                "Please consult your healthcare team urgently to adjust your treatment plan.\n\n"
+                "🚨 Urgent Action Plan:\n"
+                "- Book a pulmonary function test or CT scan if due.\n"
+                "- Ask your doctor about new CFTR modulator therapies or clinical trials.\n"
+                "- Limit physical strain but stay lightly active (guided by physiotherapist).\n"
+                "- Ensure strict adherence to prescribed medications and airway clearance routines.\n"
+                "- Monitor for warning signs: chest tightness, persistent cough, or weight loss.")
+
+
 
 # def predict(patient_folder: str, age: int, sex: str, fvc: float):
-#     """Predict FVC slope from uploaded DICOMs and clinical data"""
-    # 1. Load model
+#     """Predict FVC slope from uploaded DICOMs and clinical data"""   
+    
+# 1. Load model
 def predict(patient_folder: str, age, sex, fvc):
-    # ✅ Validate inputs
+    # Validate inputs
     try:
         age = float(age)
         fvc = float(fvc)
@@ -51,24 +72,26 @@ def predict(patient_folder: str, age, sex, fvc):
 
     model = FibroNet().to(CFG.DEVICE)
     model.load_state_dict(torch.load("ml/model.pth", map_location=CFG.DEVICE))
-    model.eval()  # Set model to evaluation mode
+    model.eval() 
 
     # 2. Load DICOMs
     volume = load_dicom_images_3d(patient_folder)
     if volume is None:
         return None, "No DICOM files found"
+    print(f" Volume shape: {volume.shape}")
 
     # 3. Preprocess
     try:
         img_tensor = preprocess_volume(volume)
+        print(f"📍 Preprocessing volume shape: {volume.shape}")
+        print(f"📍 Preprocessed image tensor shape: {img_tensor.shape}")
+
     except Exception as e:
         return None, f"Image processing error: {str(e)}"
     
     # 4. Prepare clinical data tensor
-    # clinical_tensor = torch.tensor([[age, 0 if sex.lower() == "male" else 1, fvc]], dtype=torch.float32)
     sex_encoded = 0 if sex == "male" else 1
     clinical_tensor = torch.tensor([[age, sex_encoded, fvc]], dtype=torch.float32)
-
 
     # 5. Predict
     with torch.no_grad():

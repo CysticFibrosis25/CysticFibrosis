@@ -15,7 +15,7 @@ class FibroNet(nn.Module):
         # Load EfficientNet with modified input channel handling
         self.cnn = models.efficientnet_b0(weights=None)
         self.cnn.features[0][0] = nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1, bias=False)
-        self.cnn.classifier = nn.Identity()  # Remove final classification layer
+        self.cnn.classifier = nn.Identity()  
 
         # ===== TABULAR PROCESSING BRANCH =====
         self.tabnet = TabularNet(input_dim=len(CFG.TABULAR_FEATURES))

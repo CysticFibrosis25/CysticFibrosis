@@ -2,6 +2,7 @@ import Userdetais from "../Components/Dashboard/Userdetails";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import Stats from "../Components/Dashboard/Stats";
+import PresentUserProfile from "../Components/Dashboard/PresentUserProfile";
 import { Healthtips2 } from "../Components/Healthtips2";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -87,6 +88,7 @@ const Dashboard = () => {
             </motion.div>
             <div>
               <Userdetais />
+              <PresentUserProfile profile={profile} />
               <Stats />
               <Foodsummary />
               <Healthtips2 />

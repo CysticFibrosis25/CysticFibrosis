@@ -12,6 +12,7 @@ const LoginSignup = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -52,9 +53,9 @@ const LoginSignup = () => {
         console.error(err);
       }
     } else {
-      const { name, email, password, confirmPassword, age, weight, height, sex } = formData;
+      const { name, phone, email, password, confirmPassword, age, weight, height, sex } = formData;
 
-      if (!name || !email || !password || !confirmPassword || !age || !weight || !height ||!sex) {
+      if (!name || !phone || !email || !password || !confirmPassword || !age || !weight || !height ||!sex) {
         alert("Please fill all fields");
         return;
       }
@@ -65,24 +66,22 @@ const LoginSignup = () => {
       }
 
       try {
-        const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-          name, email, password, age, weight, height, sex
-        });
+  const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
+    name, phone, email, password, age, weight, height, sex
+  });
 
-        if (res.status === 200 || res.status === 201) {
-          alert("Signup successful! Please login.");
-          setIsLogin(true);
-          setFormData({
-            name: "", email: "", password: "", confirmPassword: "",
-            age: "", weight: "", height: "", sex: ""
-          });
-        }
-      } catch (err) {
-        alert(err.response?.data?.message || "Signup failed");
-        console.error(err);
-      }
-    }
-  };
+  if (res.status === 200 || res.status === 201) {
+    localStorage.setItem("email", email);
+    localStorage.setItem("isLoggedIn", "true");
+    alert("Signup successful! Please fill more info.");
+    navigate("/moreinfo");  // <-- REDIRECT
+  }
+} catch (err) {
+  alert(err.response?.data?.message || "Signup failed");
+  console.error(err);
+}
+  }
+};
 
   return (
     <div className="min-h-screen relative font-dm-sans tracking-tight">
@@ -106,6 +105,15 @@ const LoginSignup = () => {
                     name="name"
                     placeholder="Name"
                     value={formData.name}
+                    onChange={handleChange}
+                    className="input"
+                    required
+                  />
+                  <input
+                    type="number"
+                    name="phone"
+                    placeholder="Contact No"
+                    value={formData.phone}
                     onChange={handleChange}
                     className="input"
                     required
