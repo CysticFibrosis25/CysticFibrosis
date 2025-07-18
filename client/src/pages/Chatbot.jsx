@@ -86,9 +86,9 @@ const Chatbot = () => {
   return (
     <>
       <Navbar />
-      <div className="h-full font-dm-sans flex flex-col bg-[#F3F7FF]">
+      <div className="h-full font-dm-sans flex flex-col ">
         <div className="flex-1 flex flex-col items-center justify-center pt-2 pb-4">
-          <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh] bg-white shadow-md rounded-xl overflow-hidden">
+          <div className="w-full md:max-w-2xl pt-6 flex flex-col h-[76vh] md:h-[90vh] overflow-hidden">
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
               {messages.map((msg, idx) => (
                 <div
@@ -137,4 +137,3 @@ const Chatbot = () => {
 };
 
 export default Chatbot;
-
