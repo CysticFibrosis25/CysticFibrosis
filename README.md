@@ -42,15 +42,7 @@ This project is a web application designed to assist patients with Cystic Fibros
 
 ### Home Page
 
-![Home Page](client/public/home/heroimage.png)
-
-### Dashboard
-
-![Dashboard](client/public/dashboard/profile.jpeg)
-
-### Chatbot
-
-![Chatbot](client/public/home/chatbot.png)
+![Home Page](client/public/homescreen.png/)
 
 ## Installation
 
