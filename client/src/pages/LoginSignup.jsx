@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const LoginSignup = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -59,10 +59,21 @@ const LoginSignup = () => {
         console.error(err);
       }
     } else {
-      const { name, phone, email, password, confirmPassword, age, weight, height, sex } = formData;
+      const {
+        name,
+        phone,
+        email,
+        password,
+        confirmPassword,
+        age,
+        weight,
+        height,
+        sex,
+      } = formData;
 
       if (
-        !name || !phone ||
+        !name ||
+        !phone ||
         !email ||
         !password ||
         !confirmPassword ||
@@ -82,22 +93,23 @@ const LoginSignup = () => {
 
       try {
         setSignup(true);
-  const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-    name, phone,
+        const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
+          name,
+          phone,
           email,
           password,
           age,
           weight,
           height,
           sex,
-  });
+        });
 
         if (res.status === 200 || res.status === 201) {
-           localStorage.setItem("email", email);
+          localStorage.setItem("email", email);
           localStorage.setItem("isLoggedIn", "true");
           toast.success("Signup successful! Please login.");
           setSignup(false);
-            
+
           setFormData({
             name: "",
             email: "",

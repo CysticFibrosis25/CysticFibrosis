@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const MoreInfo = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -100,7 +100,13 @@ const MoreInfo = () => {
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="mb-4">
-                <select name="cf_type" value={formData.cf_type} onChange={handleChange} required className="input w-full">
+                <select
+                  name="cf_type"
+                  value={formData.cf_type}
+                  onChange={handleChange}
+                  required
+                  className="input w-full"
+                >
                   <option value="">Select CF Type</option>
                   {cfTypes.map((type) => (
                     <option key={type}>{type}</option>
@@ -109,11 +115,24 @@ const MoreInfo = () => {
               </div>
 
               <div className="mb-4">
-                <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="input w-full" required />
+                <input
+                  type="date"
+                  name="dob"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  className="input w-full"
+                  required
+                />
               </div>
 
               <div className="mb-4">
-                <select name="lung_transplant" value={formData.lung_transplant} onChange={handleChange} className="input w-full" required>
+                <select
+                  name="lung_transplant"
+                  value={formData.lung_transplant}
+                  onChange={handleChange}
+                  className="input w-full"
+                  required
+                >
                   <option value="">Lung Transplant?</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
@@ -121,10 +140,15 @@ const MoreInfo = () => {
               </div>
 
               <fieldset className="border border-gray-300 p-3 rounded-md mb-4">
-                <legend className="text-sm font-medium text-gray-700 mb-2">Symptoms</legend>
+                <legend className="text-sm font-medium text-gray-700 mb-2">
+                  Symptoms
+                </legend>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {allSymptoms.map((sym) => (
-                    <label key={sym} className="text-sm flex items-center gap-2">
+                    <label
+                      key={sym}
+                      className="text-sm flex items-center gap-2"
+                    >
                       <input
                         type="checkbox"
                         value={sym}
@@ -138,27 +162,69 @@ const MoreInfo = () => {
               </fieldset>
 
               <div className="mb-4">
-                <input type="text" name="other_conditions" placeholder="Other Conditions" value={formData.other_conditions} onChange={handleChange} className="input w-full" />
+                <input
+                  type="text"
+                  name="other_conditions"
+                  placeholder="Other Conditions"
+                  value={formData.other_conditions}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <div className="mb-4">
-                <input type="text" name="medications" placeholder="Current Medications" value={formData.medications} onChange={handleChange} className="input w-full" />
+                <input
+                  type="text"
+                  name="medications"
+                  placeholder="Current Medications"
+                  value={formData.medications}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <div className="mb-4">
-                <input type="text" name="allergies" placeholder="Allergies" value={formData.allergies} onChange={handleChange} className="input w-full" />
+                <input
+                  type="text"
+                  name="allergies"
+                  placeholder="Allergies"
+                  value={formData.allergies}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <div className="mb-4">
-                <input type="text" name="emergency_contact_name" placeholder="Emergency Contact Name" value={formData.emergency_contact_name} onChange={handleChange} className="input w-full" />
+                <input
+                  type="text"
+                  name="emergency_contact_name"
+                  placeholder="Emergency Contact Name"
+                  value={formData.emergency_contact_name}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <div className="mb-4">
-                <input type="text" name="emergency_contact_relation" placeholder="Relation" value={formData.emergency_contact_relation} onChange={handleChange} className="input w-full" />
+                <input
+                  type="text"
+                  name="emergency_contact_relation"
+                  placeholder="Relation"
+                  value={formData.emergency_contact_relation}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <div className="mb-4">
-                <input type="tel" name="emergency_contact_phone" placeholder="Phone" value={formData.emergency_contact_phone} onChange={handleChange} className="input w-full" />
+                <input
+                  type="tel"
+                  name="emergency_contact_phone"
+                  placeholder="Phone"
+                  value={formData.emergency_contact_phone}
+                  onChange={handleChange}
+                  className="input w-full"
+                />
               </div>
 
               <button
