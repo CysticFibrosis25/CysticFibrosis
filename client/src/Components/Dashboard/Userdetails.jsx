@@ -3,6 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 
 const Userdetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,8 +35,10 @@ const Userdetails = () => {
         setProfile(response.data);
         setRemainders(response.data.reminders);
         setEditProfile(response.data);
+        toast.success("User data fetched successfully!");
       } catch (error) {
         console.error("Error fetching user data:", error);
+        toast.error("Failed to fetch user data.");
       } finally {
         setIsLoading(false);
       }
@@ -70,9 +73,11 @@ const Userdetails = () => {
         email,
       });
       setProfile(editProfile);
+      toast.success("Profile updated successfully!");
       handleCloseModal();
     } catch (error) {
       console.error("Error saving profile:", error);
+      toast.error("Failed to save profile.");
     } finally {
       setIsSaving(false);
     }
@@ -91,6 +96,7 @@ const Userdetails = () => {
         setRemainders([newRemainder, ...remainders]);
         setNewRemainder("");
         handleCloseModal();
+        toast.success("Reminder added successfully!");
       } catch (error) {
         console.error("Error adding reminder:", error);
       } finally {
@@ -105,6 +111,7 @@ const Userdetails = () => {
       data: { email, reminder },
     });
     setRemainders(remainders.filter((r) => r !== reminder));
+    toast.success("Reminder deleted successfully!");
   };
 
   return (
@@ -126,17 +133,15 @@ const Userdetails = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="p-2 flex-shrink-0 ">
-            <img
-             src={
-            profile?.profile_image
-            ? `data:image/jpeg;base64,${profile.profile_image}`
-            : "dashboard/default-user.png"
-            }
-  alt="User Profile"
-  className="md:w-32 md:h-32 w-24 h-24 rounded-full mx-auto object-cover"
-/>
-
-
+              <img
+                src={
+                  profile?.profile_image
+                    ? `data:image/jpeg;base64,${profile.profile_image}`
+                    : "dashboard/default-user.png"
+                }
+                alt="User Profile"
+                className="md:w-32 md:h-32 w-24 h-24 rounded-full mx-auto object-cover"
+              />
             </div>
             <div className="items-start justify-center flex-1 min-w-0">
               <div className="flex flex-col items-start justify-center text-xs md:text-sm font-medium tracking-tighter gap-2 p-4 min-w-0">
@@ -180,7 +185,7 @@ const Userdetails = () => {
                       {reminder}
                       <button
                         onClick={() => handleRemainderDelete(reminder)}
-                        className="bg-white/80 rounded-full items-center justify-center h-5 w-5"
+                        className="bg-white/80 rounded-full cursor-pointer items-center justify-center h-5 w-5"
                       >
                         <DeleteIcon
                           style={{ fontSize: 14, color: "#FF3131" }}
@@ -227,21 +232,23 @@ const Userdetails = () => {
                 onSubmit={handleProfileSave}
               >
                 <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                  // Store only base64 content after comma
-                setEditProfile({ ...editProfile, profile_image: reader.result.split(',')[1] });
-              };
-              reader.readAsDataURL(file);
-            }
-            }}
-            />
-
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        // Store only base64 content after comma
+                        setEditProfile({
+                          ...editProfile,
+                          profile_image: reader.result.split(",")[1],
+                        });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
 
                 <input
                   className="border rounded-full px-3 py-2"

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import EditIcon from "@mui/icons-material/Edit";
+import ArrowUpIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownIcon from "@mui/icons-material/ArrowDownward";
 
 const PresentUserDetails = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
@@ -10,6 +12,7 @@ const PresentUserDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(true);
 
   const cfTypes = [
     "Class I - No protein production",
@@ -34,7 +37,9 @@ const PresentUserDetails = () => {
       const email = localStorage.getItem("email");
       if (!email) return;
       try {
-        const res = await axios.get(`${API_BASE_URL}/auth/user/details?email=${email}`);
+        const res = await axios.get(
+          `${API_BASE_URL}/auth/user/details?email=${email}`
+        );
         setProfile(res.data);
       } catch (err) {
         console.error("Failed to fetch profile:", err);
@@ -124,67 +129,119 @@ const PresentUserDetails = () => {
   return (
     <>
       <motion.div
-        className="w-[95%] md:w-[70%] mx-auto mt-6 bg-white/80 rounded-3xl shadow-lg p-6 font-dm-sans tracking-tight relative"
+        className="w-[95%] md:w-[70%] mx-auto mt-4 bg-white/80 rounded-4xl border border-[#BDC0C2]  font-dm-sans tracking-tight "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center text-[#0A7CFF]">
-          Present User Profile
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <p><strong>CF Type:</strong> {profile.cf_type}</p>
-          <p><strong>DOB:</strong> {profile.dob}</p>
-          <p><strong>Calculated Age:</strong> {calculateAge(profile.dob)} years</p>
-          <p><strong>Lung Transplant:</strong> {profile.lung_transplant}</p>
-          <p><strong>Symptoms:</strong> {profile.symptoms?.join(", ")}</p>
-          <p><strong>Other Conditions:</strong> {profile.other_conditions}</p>
-          <p><strong>Medications:</strong> {profile.medications}</p>
-          <p><strong>Allergies:</strong> {profile.allergies}</p>
-          <p className="col-span-2">
-            <strong>Emergency Contact:</strong>{" "}
-            {profile.emergency_contact?.name} (
-            {profile.emergency_contact?.relation}) –{" "}
-            {profile.emergency_contact?.phone}
-          </p>
+        <div className="flex justify-between  border-[#ececec] items-center px-6 py-3  ">
+          <h2 className="text-xl font-bold text-left  text-[#0A7CFF]">
+            User Profile
+          </h2>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={openEditModal}
+              className=" text-white bg-[#0A7CFF] w-[100px] cursor-pointer p-1 rounded-full shadow hover:bg-[#005DE0]"
+            >
+              <EditIcon style={{ fontSize: 18 }} />
+            </button>
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="text-white bg-[#0A7CFF] cursor-pointer  p-1 rounded-full "
+            >
+              <div>{dropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}</div>
+            </button>
+          </div>
         </div>
 
-        {/* Edit button */}
-        <button
-          onClick={openEditModal}
-          className="absolute top-4 right-4 text-white bg-[#0A7CFF] p-2 rounded-full shadow hover:bg-[#005DE0]"
-        >
-          <EditIcon style={{ fontSize: 18 }} />
-        </button>
+        {dropdownOpen && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 border border-t-2 border-[#ececec] text-sm">
+            <p>
+              <strong>CF Type:</strong> {profile.cf_type}
+            </p>
+            <p>
+              <strong>DOB:</strong> {profile.dob}
+            </p>
+            <p>
+              <strong>Calculated Age:</strong> {calculateAge(profile.dob)} years
+            </p>
+            <p>
+              <strong>Lung Transplant:</strong> {profile.lung_transplant}
+            </p>
+            <p>
+              <strong>Symptoms:</strong> {profile.symptoms?.join(", ")}
+            </p>
+            <p>
+              <strong>Other Conditions:</strong> {profile.other_conditions}
+            </p>
+            <p>
+              <strong>Medications:</strong> {profile.medications}
+            </p>
+            <p>
+              <strong>Allergies:</strong> {profile.allergies}
+            </p>
+            <p className="col-span-2">
+              <strong>Emergency Contact:</strong>{" "}
+              {profile.emergency_contact?.name} (
+              {profile.emergency_contact?.relation}) –{" "}
+              {profile.emergency_contact?.phone}
+            </p>
+          </div>
+        )}
       </motion.div>
 
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-xl p-6 w-[90%] max-w-lg backdrop-blur-2xl">
-            <h2 className="text-lg font-semibold text-[#0A7CFF] mb-4 text-center">Edit Extended Profile</h2>
+            <h2 className="text-lg font-semibold text-[#0A7CFF] mb-4 text-center">
+              Edit Extended Profile
+            </h2>
             <form className="space-y-3" onSubmit={handleSave}>
-              <select name="cf_type" value={editData.cf_type} onChange={handleEditChange} className="input" required>
+              <select
+                name="cf_type"
+                value={editData.cf_type}
+                onChange={handleEditChange}
+                className="input"
+                required
+              >
                 <option value="">Select CF Type</option>
                 {cfTypes.map((type) => (
                   <option key={type}>{type}</option>
                 ))}
               </select>
 
-              <input type="date" name="dob" value={editData.dob} onChange={handleEditChange} className="input" required />
+              <input
+                type="date"
+                name="dob"
+                value={editData.dob}
+                onChange={handleEditChange}
+                className="input"
+                required
+              />
 
-              <select name="lung_transplant" value={editData.lung_transplant} onChange={handleEditChange} className="input" required>
+              <select
+                name="lung_transplant"
+                value={editData.lung_transplant}
+                onChange={handleEditChange}
+                className="input"
+                required
+              >
                 <option value="">Lung Transplant?</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
               </select>
 
-              {/* Symptoms */}
               <fieldset className="border border-gray-300 p-2 rounded">
-                <legend className="text-sm font-medium text-gray-700 mb-1">Symptoms</legend>
+                <legend className="text-sm font-medium text-gray-700 mb-1">
+                  Symptoms
+                </legend>
                 <div className="grid grid-cols-2 gap-2">
                   {allSymptoms.map((sym) => (
-                    <label key={sym} className="flex items-center gap-2 text-sm">
+                    <label
+                      key={sym}
+                      className="flex items-center gap-2 text-sm"
+                    >
                       <input
                         type="checkbox"
                         value={sym}
@@ -197,20 +254,70 @@ const PresentUserDetails = () => {
                 </div>
               </fieldset>
 
-              <input type="text" name="other_conditions" placeholder="Other Conditions" value={editData.other_conditions} onChange={handleEditChange} className="input" />
-              <input type="text" name="medications" placeholder="Medications" value={editData.medications} onChange={handleEditChange} className="input" />
-              <input type="text" name="allergies" placeholder="Allergies" value={editData.allergies} onChange={handleEditChange} className="input" />
+              <input
+                type="text"
+                name="other_conditions"
+                placeholder="Other Conditions"
+                value={editData.other_conditions}
+                onChange={handleEditChange}
+                className="input"
+              />
+              <input
+                type="text"
+                name="medications"
+                placeholder="Medications"
+                value={editData.medications}
+                onChange={handleEditChange}
+                className="input"
+              />
+              <input
+                type="text"
+                name="allergies"
+                placeholder="Allergies"
+                value={editData.allergies}
+                onChange={handleEditChange}
+                className="input"
+              />
 
               {/* Emergency Contact */}
-              <input type="text" name="emergency_contact.name" placeholder="Emergency Contact Name" value={editData.emergency_contact?.name || ""} onChange={handleEditChange} className="input" />
-              <input type="text" name="emergency_contact.relation" placeholder="Relation" value={editData.emergency_contact?.relation || ""} onChange={handleEditChange} className="input" />
-              <input type="tel" name="emergency_contact.phone" placeholder="Phone" value={editData.emergency_contact?.phone || ""} onChange={handleEditChange} className="input" />
+              <input
+                type="text"
+                name="emergency_contact.name"
+                placeholder="Emergency Contact Name"
+                value={editData.emergency_contact?.name || ""}
+                onChange={handleEditChange}
+                className="input"
+              />
+              <input
+                type="text"
+                name="emergency_contact.relation"
+                placeholder="Relation"
+                value={editData.emergency_contact?.relation || ""}
+                onChange={handleEditChange}
+                className="input"
+              />
+              <input
+                type="tel"
+                name="emergency_contact.phone"
+                placeholder="Phone"
+                value={editData.emergency_contact?.phone || ""}
+                onChange={handleEditChange}
+                className="input"
+              />
 
               <div className="flex justify-end gap-2">
-                <button type="button" onClick={() => setModalOpen(false)} className="bg-gray-300 px-4 py-1 rounded">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="bg-gray-300 px-4 py-1 rounded"
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={isSaving} className="bg-[#0A7CFF] text-white px-4 py-1 rounded hover:bg-[#005DE0]">
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="bg-[#0A7CFF] text-white px-4 py-1 rounded hover:bg-[#005DE0]"
+                >
                   {isSaving ? "Saving..." : "Save"}
                 </button>
               </div>
