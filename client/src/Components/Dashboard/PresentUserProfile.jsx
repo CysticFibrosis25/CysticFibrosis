@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowUpIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownward";
-
+import toast from "react-hot-toast";
 const PresentUserDetails = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   const [profile, setProfile] = useState(null);
@@ -97,10 +97,11 @@ const PresentUserDetails = () => {
         email,
       });
       setProfile(editData);
+      toast.success("Profile updated successfully!");
       setModalOpen(false);
     } catch (err) {
       console.error("Failed to save profile:", err);
-      alert("Update failed.");
+      toast.error("Update failed.");
     } finally {
       setIsSaving(false);
     }

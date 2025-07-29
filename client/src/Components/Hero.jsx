@@ -36,7 +36,7 @@ const Hero = () => {
           transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
           <motion.button
-            className="bg-[#0A7CFF] text-white font-medium py-3 px-8 md:px-16 rounded-full w-4/5 md:w-auto"
+            className="bg-[#0A7CFF] text-white font-medium cursor-pointer py-3 px-8 md:px-16 rounded-full w-4/5 md:w-auto"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -44,7 +44,7 @@ const Hero = () => {
             Get Started
           </motion.button>
           <motion.button
-            className="bg-[#7AB7E0] text-black font-medium py-3 px-8 md:px-16 rounded-full w-4/5 md:w-auto"
+            className="bg-[#7AB7E0] text-black font-medium py-3 px-8 md:px-16 cursor-pointer rounded-full w-4/5 md:w-auto"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
