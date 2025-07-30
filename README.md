@@ -42,9 +42,9 @@ This project is a web application designed to assist patients with Cystic Fibros
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
   <img src="client/public/homescreen.png" alt="Home Page" width="400" />
-  <img src="client/public/dashboard1.png" alt="Dashboard 1" width="400" />
-  <img src="client/public/dashboard2.png" alt="Dashboard 2" width="400" />
   <img src="client/public/dashboard3.png" alt="Dashboard 3" width="400" />
+  <img src="client/public/dashboard4.png" alt="Dashboard 4" width="400" />
+  <img src="client/public/dashboard2.png" alt="Dashboard 2" width="400" />
 </div>
 
 ## Installation
