@@ -9,7 +9,7 @@ import Chatbot from "./pages/Chatbot";
 import MoreInfo from "./pages/MoreInfo";
 import CFSignup from "./pages/CFSignup";
 import FvcPrediction from "./pages/FvcPrediction";
-import FoodNutrition from "./Pages/FoodNutrition";
+import FoodNutrition from "./pages/FoodNutrition";
 
 /* Toasts */
 import { Toaster } from "react-hot-toast";
