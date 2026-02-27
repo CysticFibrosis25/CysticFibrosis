@@ -5,14 +5,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowUpIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownward";
 import toast from "react-hot-toast";
-const PresentUserDetails = () => {
+
+const PresentUserProfile = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
+
   const [profile, setProfile] = useState(null);
   const [editData, setEditData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(true);
+  const [expanded, setExpanded] = useState(true);
 
   const cfTypes = [
     "Class I - No protein production",
@@ -33,45 +35,39 @@ const PresentUserDetails = () => {
   ];
 
   useEffect(() => {
-    const fetchInfo = async () => {
-      const email = localStorage.getItem("email");
-      if (!email) return;
+    const fetchCFProfile = async () => {
       try {
+        const email = localStorage.getItem("email");
+        if (!email) return;
+
         const res = await axios.get(
-          `${API_BASE_URL}/auth/user/details?email=${email}`
+          `${API_BASE_URL}/api/cf?email=${email}`
         );
+
         setProfile(res.data);
       } catch (err) {
-        console.error("Failed to fetch profile:", err);
+        console.error("Failed to fetch CF profile:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchInfo();
-  }, [API_BASE_URL]);
 
-  const calculateAge = (dob) => {
-    if (!dob) return "";
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-    return age;
-  };
+    fetchCFProfile();
+  }, [API_BASE_URL]);
 
   const openEditModal = () => {
     setEditData(profile);
     setModalOpen(true);
   };
 
-  const handleEditChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
       const updatedSymptoms = checked
-        ? [...editData.symptoms, value]
-        : editData.symptoms.filter((sym) => sym !== value);
+        ? [...(editData.symptoms || []), value]
+        : editData.symptoms.filter((s) => s !== value);
+
       setEditData({ ...editData, symptoms: updatedSymptoms });
     } else if (name.startsWith("emergency_contact.")) {
       const field = name.split(".")[1];
@@ -87,23 +83,27 @@ const PresentUserDetails = () => {
     }
   };
 
-  const handleSave = async (e) => {
+  const saveCFProfile = async (e) => {
     e.preventDefault();
-    setIsSaving(true);
+    setSaving(true);
+
     try {
-      const email = localStorage.getItem("email");
-      await axios.put(`${API_BASE_URL}/auth/user/update`, {
-        ...editData,
-        email,
+      await axios.put(`${API_BASE_URL}/api/cf`, {
+        email: localStorage.getItem("email"),
+        cf_type: editData.cf_type,
+        lung_transplant: editData.lung_transplant,
+        symptoms: editData.symptoms,
+        other_conditions: editData.other_conditions,
+        medications: editData.medications,
       });
+
       setProfile(editData);
-      toast.success("Profile updated successfully!");
+      toast.success("CF profile updated successfully");
       setModalOpen(false);
     } catch (err) {
-      console.error("Failed to save profile:", err);
-      toast.error("Update failed.");
+      toast.error("Failed to update CF profile");
     } finally {
-      setIsSaving(false);
+      setSaving(false);
     }
   };
 
@@ -111,18 +111,18 @@ const PresentUserDetails = () => {
     return (
       <div className="w-full flex justify-center items-center py-16">
         <div className="flex space-x-2">
-          <div className="w-2 h-2 bg-[#0A7CFF] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div className="w-2 h-2 bg-[#0A7CFF] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
           <div className="w-2 h-2 bg-[#0A7CFF] rounded-full animate-bounce"></div>
+          <div className="w-2 h-2 bg-[#0A7CFF] rounded-full animate-bounce delay-100"></div>
+          <div className="w-2 h-2 bg-[#0A7CFF] rounded-full animate-bounce delay-200"></div>
         </div>
       </div>
     );
   }
 
-  if (!profile || !profile.cf_type) {
+  if (!profile?.cf_type) {
     return (
       <div className="text-center text-gray-500 mt-10">
-        No extended profile info found.
+        CF profile not completed yet.
       </div>
     );
   }
@@ -130,204 +130,158 @@ const PresentUserDetails = () => {
   return (
     <>
       <motion.div
-        className="w-[95%] md:w-[70%] mx-auto mt-4 bg-white/80 rounded-4xl border border-[#BDC0C2]  font-dm-sans tracking-tight "
+        className="w-[95%] md:w-[70%] mx-auto mt-6 bg-white/80 rounded-4xl border border-[#BDC0C2] font-dm-sans tracking-tight"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
       >
-        <div className="flex justify-between  border-[#ececec] items-center px-6 py-3  ">
-          <h2 className="text-xl font-bold text-left  text-[#0A7CFF]">
-            User Profile
+        {/* Header */}
+        <div className="flex justify-between items-center px-6 py-4 border-b">
+          <h2 className="text-xl font-bold text-[#0A7CFF]">
+            Cystic Fibrosis Profile
           </h2>
-          <div className="flex items-center space-x-2">
+
+          <div className="flex gap-2">
             <button
               onClick={openEditModal}
-              className=" text-white bg-[#0A7CFF] w-[100px] cursor-pointer p-1 rounded-full shadow hover:bg-[#005DE0]"
+              className="bg-[#0A7CFF] text-white rounded-full px-3 py-1"
             >
-              <EditIcon style={{ fontSize: 18 }} />
+              <EditIcon fontSize="small" />
             </button>
+
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="text-white bg-[#0A7CFF] cursor-pointer  p-1 rounded-full "
+              onClick={() => setExpanded(!expanded)}
+              className="bg-[#0A7CFF] text-white rounded-full px-2"
             >
-              <div>{dropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}</div>
+              {expanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
             </button>
           </div>
         </div>
 
-        {dropdownOpen && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 border border-t-2 border-[#ececec] text-sm">
+        {/* Content */}
+        {expanded && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 text-sm">
             <p>
               <strong>CF Type:</strong> {profile.cf_type}
             </p>
-            <p>
-              <strong>DOB:</strong> {profile.dob}
-            </p>
-            <p>
-              <strong>Calculated Age:</strong> {calculateAge(profile.dob)} years
-            </p>
+            <br/>
             <p>
               <strong>Lung Transplant:</strong> {profile.lung_transplant}
             </p>
-            <p>
-              <strong>Symptoms:</strong> {profile.symptoms?.join(", ")}
+            <p className="md:col-span-2">
+              <strong>Symptoms:</strong>{" "}
+              {profile.symptoms?.length
+                ? profile.symptoms.join(", ")
+                : "None selected"}
             </p>
-            <p>
-              <strong>Other Conditions:</strong> {profile.other_conditions}
+            <p className="md:col-span-2">
+              <strong>Other Conditions:</strong>{" "}
+              {profile.other_conditions || "None reported"}
             </p>
-            <p>
-              <strong>Medications:</strong> {profile.medications}
-            </p>
-            <p>
-              <strong>Allergies:</strong> {profile.allergies}
-            </p>
-            <p className="col-span-2">
-              <strong>Emergency Contact:</strong>{" "}
-              {profile.emergency_contact?.name} (
-              {profile.emergency_contact?.relation}) –{" "}
-              {profile.emergency_contact?.phone}
+            <p className="md:col-span-2">
+              <strong>Medications:</strong>{" "}
+              {profile.medications || "None reported"}
             </p>
           </div>
         )}
       </motion.div>
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-[90%] max-w-lg backdrop-blur-2xl">
-            <h2 className="text-lg font-semibold text-[#0A7CFF] mb-4 text-center">
-              Edit Extended Profile
-            </h2>
-            <form className="space-y-3" onSubmit={handleSave}>
-              <select
-                name="cf_type"
-                value={editData.cf_type}
-                onChange={handleEditChange}
-                className="input"
-                required
-              >
-                <option value="">Select CF Type</option>
-                {cfTypes.map((type) => (
-                  <option key={type}>{type}</option>
-                ))}
-              </select>
+      {/* Edit Modal */}
+      <AnimatePresence>
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+            <motion.div
+              className="bg-white rounded-xl p-6 w-[90%] max-w-lg"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <h2 className="text-lg font-semibold text-[#0A7CFF] mb-4 text-center">
+                Edit CF Profile
+              </h2>
 
-              <input
-                type="date"
-                name="dob"
-                value={editData.dob}
-                onChange={handleEditChange}
-                className="input"
-                required
-              />
-
-              <select
-                name="lung_transplant"
-                value={editData.lung_transplant}
-                onChange={handleEditChange}
-                className="input"
-                required
-              >
-                <option value="">Lung Transplant?</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-
-              <fieldset className="border border-gray-300 p-2 rounded">
-                <legend className="text-sm font-medium text-gray-700 mb-1">
-                  Symptoms
-                </legend>
-                <div className="grid grid-cols-2 gap-2">
-                  {allSymptoms.map((sym) => (
-                    <label
-                      key={sym}
-                      className="flex items-center gap-2 text-sm"
-                    >
-                      <input
-                        type="checkbox"
-                        value={sym}
-                        checked={editData.symptoms?.includes(sym)}
-                        onChange={handleEditChange}
-                      />
-                      {sym}
-                    </label>
+              <form onSubmit={saveCFProfile} className="space-y-3">
+                <select
+                  name="cf_type"
+                  value={editData.cf_type}
+                  onChange={handleChange}
+                  className="input"
+                  required
+                >
+                  <option value="">Select CF Type</option>
+                  {cfTypes.map((t) => (
+                    <option key={t}>{t}</option>
                   ))}
+                </select>
+
+                <select
+                  name="lung_transplant"
+                  value={editData.lung_transplant}
+                  onChange={handleChange}
+                  className="input"
+                  required
+                >
+                  <option value="">Lung Transplant?</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+
+                <fieldset className="border p-2 rounded">
+                  <legend className="text-sm font-medium">Symptoms</legend>
+                  <div className="grid grid-cols-2 gap-2">
+                    {allSymptoms.map((s) => (
+                      <label key={s} className="flex gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          value={s}
+                          checked={editData.symptoms?.includes(s)}
+                          onChange={handleChange}
+                        />
+                        {s}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+
+                <input
+                  type="text"
+                  name="other_conditions"
+                  placeholder="Other Conditions"  
+                  value={editData.other_conditions || ""}
+                  onChange={handleChange}
+                  className="input"
+                />
+                <input
+                  type="text"
+                  name="medications"
+                  placeholder="Medications"
+                  value={editData.medications || ""}
+                  onChange={handleChange}
+                  className="input"
+                />
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setModalOpen(false)}
+                    className="bg-gray-300 px-4 py-1 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-[#0A7CFF] text-white px-4 py-1 rounded"
+                  >
+                    {saving ? "Saving..." : "Save"}
+                  </button>
                 </div>
-              </fieldset>
-
-              <input
-                type="text"
-                name="other_conditions"
-                placeholder="Other Conditions"
-                value={editData.other_conditions}
-                onChange={handleEditChange}
-                className="input"
-              />
-              <input
-                type="text"
-                name="medications"
-                placeholder="Medications"
-                value={editData.medications}
-                onChange={handleEditChange}
-                className="input"
-              />
-              <input
-                type="text"
-                name="allergies"
-                placeholder="Allergies"
-                value={editData.allergies}
-                onChange={handleEditChange}
-                className="input"
-              />
-
-              {/* Emergency Contact */}
-              <input
-                type="text"
-                name="emergency_contact.name"
-                placeholder="Emergency Contact Name"
-                value={editData.emergency_contact?.name || ""}
-                onChange={handleEditChange}
-                className="input"
-              />
-              <input
-                type="text"
-                name="emergency_contact.relation"
-                placeholder="Relation"
-                value={editData.emergency_contact?.relation || ""}
-                onChange={handleEditChange}
-                className="input"
-              />
-              <input
-                type="tel"
-                name="emergency_contact.phone"
-                placeholder="Phone"
-                value={editData.emergency_contact?.phone || ""}
-                onChange={handleEditChange}
-                className="input"
-              />
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="bg-gray-300 px-4 py-1 rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="bg-[#0A7CFF] text-white px-4 py-1 rounded hover:bg-[#005DE0]"
-                >
-                  {isSaving ? "Saving..." : "Save"}
-                </button>
-              </div>
-            </form>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 };
 
-export default PresentUserDetails;
+export default PresentUserProfile;

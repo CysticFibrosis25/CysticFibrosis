@@ -15,9 +15,17 @@ const Userdetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [newRemainderTime, setNewRemainderTime] = useState("");
+
 
   const API_BASE_URL =
     import.meta.env.VITE_REACT_APP_BACKEND_URL || "https://localhost:5000";
+
+  useEffect(() => {
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,6 +44,9 @@ const Userdetails = () => {
         setRemainders(response.data.reminders);
         setEditProfile(response.data);
         toast.success("User data fetched successfully!");
+
+        response.data.reminders.forEach(scheduleInPageNotification);
+        scheduleNotifications(response.data.reminders || []);
       } catch (error) {
         console.error("Error fetching user data:", error);
         toast.error("Failed to fetch user data.");
@@ -60,8 +71,22 @@ const Userdetails = () => {
   };
 
   const handleProfileChange = (e) => {
-    setEditProfile({ ...editProfile, [e.target.name]: e.target.value });
-  };
+  const { name, value } = e.target;
+
+  if (name.startsWith("emergency_contact.")) {
+    const field = name.split(".")[1];
+    setEditProfile({
+      ...editProfile,
+      emergency_contact: {
+        ...editProfile.emergency_contact,
+        [field]: value,
+      },
+    });
+  } else {
+    setEditProfile({ ...editProfile, [name]: value });
+  }
+};
+
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
@@ -84,26 +109,38 @@ const Userdetails = () => {
   };
 
   const handleRemainderAdd = async (e) => {
-    e.preventDefault();
-    if (newRemainder.trim()) {
-      setIsSaving(true);
-      try {
-        const email = localStorage.getItem("email");
-        await axios.post(`${API_BASE_URL}/auth/user/reminders`, {
-          email,
-          reminder: newRemainder,
-        });
-        setRemainders([newRemainder, ...remainders]);
-        setNewRemainder("");
-        handleCloseModal();
-        toast.success("Reminder added successfully!");
-      } catch (error) {
-        console.error("Error adding reminder:", error);
-      } finally {
-        setIsSaving(false);
+  e.preventDefault();
+  if (newRemainder.trim() && newRemainderTime) {
+    setIsSaving(true);
+    try {
+      const email = localStorage.getItem("email");
+      const reminderObj = { text: newRemainder, time: newRemainderTime };
+      await axios.post(`${API_BASE_URL}/auth/user/reminders`, {
+        email,
+        reminder: reminderObj,
+      });
+      setRemainders([...remainders, reminderObj]);
+      setNewRemainder("");
+      setNewRemainderTime("");
+      if (!newRemainder.trim() || !newRemainderTime) {
+      toast.error("Reminder text and time are required!");
+     return;
       }
+
+      scheduleNotifications([reminderObj]);
+      handleCloseModal();
+
+      toast.success("Reminder added successfully!");
+    } catch (error) {
+      console.error("Error adding reminder:", error);
+    } finally {
+      setIsSaving(false);
     }
-  };
+  } else {
+    toast.error("Please enter reminder and time!");
+  }
+};
+
 
   const handleRemainderDelete = async (reminder) => {
     const email = localStorage.getItem("email");
@@ -113,6 +150,39 @@ const Userdetails = () => {
     setRemainders(remainders.filter((r) => r !== reminder));
     toast.success("Reminder deleted successfully!");
   };
+
+  const scheduleNotifications = (reminders) => {
+  reminders.forEach((reminder) => {
+    // Convert reminder time string to timestamp
+    const reminderTime = new Date(reminder.time).getTime();
+    const now = new Date().getTime();
+    const delay = reminderTime - now;
+
+    if (delay > 0) {
+      // Schedule notification
+      setTimeout(() => {
+        new Notification("Reminder", {
+          body: reminder.text,
+        });
+      }, delay);
+    }
+  });
+};
+
+
+const scheduleInPageNotification = (reminder) => {
+  const reminderTime = new Date(reminder.time).getTime();
+  const now = new Date().getTime();
+  const delay = reminderTime - now;
+
+  if (delay > 0) {
+    setTimeout(() => {
+      toast(reminder.text, { duration: 5000 }); // 5 seconds toast
+    }, delay);
+  }
+};
+
+
 
   return (
     <div className="w-[95%] md:w-[70%] flex md:flex-row flex-col gap-2 mx-auto mt-4 mb-2">
@@ -145,13 +215,14 @@ const Userdetails = () => {
             </div>
             <div className="items-start justify-center flex-1 min-w-0">
               <div className="flex flex-col items-start justify-center text-xs md:text-sm font-medium tracking-tighter gap-2 p-4 min-w-0">
-                <p className="truncate w-full">{profile.name}</p>
-                <p className="truncate w-full">{profile.email}</p>
-                <p className="truncate w-full">{profile.phone}</p>
+                <p className="truncate w-full">Name: {profile.name}</p>
+                <p className="truncate w-full">Email: {profile.email}</p>
+                <p className="truncate w-full">Contact No: {profile.phone}</p>
+                <p className=""><strong>Emergency Contact</strong></p>
                 <div className="flex flex-row items-center gap-4 w-full">
-                  <p className="">Age: {profile.age} yrs</p>
-                  <p className="">Weight: {profile.weight} kg</p>
-                  <p className="">Sex: {profile.sex}</p>
+                  <p className="">Name: {profile.emergency_contact?.name} </p>
+                  <p className="">Relation: {profile.emergency_contact?.relation} </p>
+                  <p className="">Sex: {profile.emergency_contact?.phone}</p>
                 </div>
               </div>
             </div>
@@ -182,7 +253,9 @@ const Userdetails = () => {
                       key={index}
                       className="bg-[#c4ebf9] px-4 py-2 max-w-[95%] text-xs md:text-sm rounded-full mb-2 flex justify-between"
                     >
-                      {reminder}
+                      <div>
+                      {reminder.text} - {new Date(reminder.time).toLocaleString()}
+                      </div>
                       <button
                         onClick={() => handleRemainderDelete(reminder)}
                         className="bg-white/80 rounded-full cursor-pointer items-center justify-center h-5 w-5"
@@ -274,16 +347,23 @@ const Userdetails = () => {
                 <div className="flex gap-2">
                   <input
                     className="border rounded-full px-3 py-2 w-1/2"
-                    placeholder="Age"
-                    name="age"
-                    value={editProfile.age}
+                    placeholder="Emergency Contact Name"
+                    name="emergency_contact.name"
+                    value={editProfile.emergency_contact.name}
                     onChange={handleProfileChange}
                   />
                   <input
                     className="border rounded-full px-3 py-2 w-1/2"
-                    placeholder="Weight"
-                    name="weight"
-                    value={editProfile.weight}
+                    placeholder="Emergency Contact Relation"
+                    name="emergency_contact.relation"
+                    value={editProfile.emergency_contact.relation}
+                    onChange={handleProfileChange}
+                  />
+                  <input
+                    className="border rounded-full px-3 py-2 w-1/2"
+                    placeholder="Emergency Contact Number"
+                    name="emergency_contact.phone"
+                    value={editProfile.emergency_contact.phone}
                     onChange={handleProfileChange}
                   />
                 </div>
@@ -332,6 +412,14 @@ const Userdetails = () => {
                   value={newRemainder}
                   onChange={(e) => setNewRemainder(e.target.value)}
                 />
+
+                <input
+                  type="datetime-local"
+                  className="border rounded-full px-3 py-2"
+                  value={newRemainderTime}
+                  onChange={(e) => setNewRemainderTime(e.target.value)}
+                />
+
                 <button
                   type="submit"
                   disabled={isSaving}

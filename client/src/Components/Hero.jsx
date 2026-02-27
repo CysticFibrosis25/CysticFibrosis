@@ -40,6 +40,7 @@ const Hero = () => {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
+            onClick={() => window.location.href = "/login" }
           >
             Get Started
           </motion.button>
@@ -48,8 +49,9 @@ const Hero = () => {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
+            onClick={() => window.location.href = "/login" }
           >
-            login
+            Login
           </motion.button>
         </motion.div>
       </motion.div>

@@ -10,77 +10,48 @@ const MoreInfo = () => {
   const email = localStorage.getItem("email");
 
   const [formData, setFormData] = useState({
-    cf_type: "",
     dob: "",
-    lung_transplant: "",
-    symptoms: [],
-    other_conditions: "",
-    medications: "",
+    sex: "",
+    height: "",
+    weight: "",
     allergies: "",
-    emergency_contact_name: "",
-    emergency_contact_relation: "",
-    emergency_contact_phone: "",
   });
 
-  const cfTypes = [
-    "Class I - No protein production",
-    "Class II - Misfolded protein",
-    "Class III - Channel gating defect",
-    "Class IV - Conductance defect",
-    "Class V - Reduced protein production",
-    "Unknown",
-  ];
-
-  const allSymptoms = [
-    "Wheezing",
-    "Chronic cough",
-    "Shortness of breath",
-    "Weight loss",
-    "Fatigue",
-    "Recurrent lung infections",
-  ];
-
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    if (type === "checkbox") {
-      setFormData((prev) => {
-        const updatedSymptoms = checked
-          ? [...prev.symptoms, value]
-          : prev.symptoms.filter((sym) => sym !== value);
-        return { ...prev, symptoms: updatedSymptoms };
-      });
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      email,
-      cf_type: formData.cf_type,
-      dob: formData.dob,
-      lung_transplant: formData.lung_transplant,
-      symptoms: formData.symptoms,
-      other_conditions: formData.other_conditions,
-      medications: formData.medications,
-      allergies: formData.allergies,
-      emergency_contact: {
-        name: formData.emergency_contact_name,
-        relation: formData.emergency_contact_relation,
-        phone: formData.emergency_contact_phone,
-      },
-    };
+
+    if (
+      !formData.dob ||
+      !formData.sex ||
+      !formData.height ||
+      !formData.weight
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
     try {
-      await axios.put(`${API_BASE_URL}/auth/user/update`, payload);
-      toast.success("Onboarding Info added successfully! Please login.");
-      localStorage.clear();
-      navigate("/login");
+      await axios.post(`${API_BASE_URL}/api/health`, {
+        email,
+        dob: formData.dob,
+        sex: formData.sex,
+        height: formData.height,
+        weight: formData.weight,
+        allergies: formData.allergies,
+      });
+
+      toast.success("Health profile saved");
+      navigate("/signup/cf"); // STEP-3
     } catch (err) {
-      toast.error("Failed to update information. Please try again.");
       console.error(err);
+      toast.error("Failed to save health profile");
     }
   };
 
@@ -91,147 +62,73 @@ const MoreInfo = () => {
         alt="Hero"
         className="w-full h-[100vh] object-cover absolute top-0 left-0 z-0"
       />
+
       <div className="absolute top-0 left-0 w-full z-10">
         <Navbar />
+
         <div className="flex flex-col items-center justify-center min-h-[60vh] pt-16">
           <div className="bg-white/80 backdrop-blur-md rounded-lg p-8 max-w-md w-full shadow-lg">
             <h2 className="text-2xl font-bold mb-6 text-center text-[#0A7CFF]">
-              More Patient Information
+              Health Information
             </h2>
+
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="mb-4">
-                <select
-                  name="cf_type"
-                  value={formData.cf_type}
-                  onChange={handleChange}
-                  required
-                  className="input w-full"
-                >
-                  <option value="">Select CF Type</option>
-                  {cfTypes.map((type) => (
-                    <option key={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
+              <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                className="input w-full"
+                required
+              />
 
-              <div className="mb-4">
-                <input
-                  type="date"
-                  name="dob"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  className="input w-full"
-                  required
-                />
-              </div>
+              <select
+                name="sex"
+                value={formData.sex}
+                onChange={handleChange}
+                className="input w-full"
+                required
+              >
+                <option value="">Select Sex</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
 
-              <div className="mb-4">
-                <select
-                  name="lung_transplant"
-                  value={formData.lung_transplant}
-                  onChange={handleChange}
-                  className="input w-full"
-                  required
-                >
-                  <option value="">Lung Transplant?</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
+              <input
+                type="number"
+                name="height"
+                placeholder="Height (cm)"
+                value={formData.height}
+                onChange={handleChange}
+                className="input w-full"
+                required
+              />
 
-              <fieldset className="border border-gray-300 p-3 rounded-md mb-4">
-                <legend className="text-sm font-medium text-gray-700 mb-2">
-                  Symptoms
-                </legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {allSymptoms.map((sym) => (
-                    <label
-                      key={sym}
-                      className="text-sm flex items-center gap-2"
-                    >
-                      <input
-                        type="checkbox"
-                        value={sym}
-                        checked={formData.symptoms.includes(sym)}
-                        onChange={handleChange}
-                      />
-                      {sym}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
+              <input
+                type="number"
+                name="weight"
+                placeholder="Weight (kg)"
+                value={formData.weight}
+                onChange={handleChange}
+                className="input w-full"
+                required
+              />
 
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="other_conditions"
-                  placeholder="Other Conditions"
-                  value={formData.other_conditions}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="medications"
-                  placeholder="Current Medications"
-                  value={formData.medications}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="allergies"
-                  placeholder="Allergies"
-                  value={formData.allergies}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="emergency_contact_name"
-                  placeholder="Emergency Contact Name"
-                  value={formData.emergency_contact_name}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="emergency_contact_relation"
-                  placeholder="Relation"
-                  value={formData.emergency_contact_relation}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
-
-              <div className="mb-4">
-                <input
-                  type="tel"
-                  name="emergency_contact_phone"
-                  placeholder="Phone"
-                  value={formData.emergency_contact_phone}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
-              </div>
+              <input
+                type="text"
+                name="allergies"
+                placeholder="Allergies (if any)"
+                value={formData.allergies}
+                onChange={handleChange}
+                className="input w-full"
+              />
 
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold"
               >
-                Save & Continue
+                Continue
               </button>
             </form>
           </div>

@@ -1,26 +1,40 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+/* Pages */
 import Home from "./pages/Home";
 import LoginSignup from "./pages/LoginSignup";
 import Dashboard from "./pages/Dashboard";
 import Chatbot from "./pages/Chatbot";
 import MoreInfo from "./pages/MoreInfo";
-import { Toaster } from "react-hot-toast";
+import CFSignup from "./pages/CFSignup";
+import FvcPrediction from "./pages/FvcPrediction";
+import FoodNutrition from "./Pages/FoodNutrition";
 
-import { ToastContainer, Slide } from "react-toastify";
+/* Toasts */
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <>
       <Router>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginSignup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/chatbot" element={<Chatbot />} />
+
+          {/* Onboarding */}
           <Route path="/moreinfo" element={<MoreInfo />} />
+          <Route path="/signup/cf" element={<CFSignup />} />
+
+          {/* Protected routes */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/fvc-prediction" element={<FvcPrediction />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/food" element={<FoodNutrition />} />
         </Routes>
       </Router>
+
       <Toaster
         position="bottom-right"
         toastOptions={{
@@ -63,3 +77,4 @@ const App = () => {
 };
 
 export default App;
+

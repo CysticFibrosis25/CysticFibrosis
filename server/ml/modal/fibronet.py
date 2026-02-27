@@ -7,8 +7,6 @@ from ml.config import CFG
 class FibroNet(nn.Module):
     def __init__(self):
         super().__init__()
-
-        # ===== IMAGE PROCESSING BRANCH =====
         # Convert grayscale to 3-channel (RGB) for EfficientNet
         self.grayscale_to_rgb = nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=0)
 

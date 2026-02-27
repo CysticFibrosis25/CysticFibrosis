@@ -9,6 +9,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [user, setUser] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
 
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -19,7 +20,9 @@ const Chatbot = () => {
       /\*\*(.*?)\*\*/g,
       "<strong>$1</strong>"
     );
+    formattedText = formattedText.replace(/\*(.*?)\*/g, "<em>$1</em>");
     formattedText = formattedText.replace(/\n/g, "<br/>");
+    formattedText = formattedText.replace(/_(.*?)_/g, "<em>$1</em>");
     formattedText = `<p>${formattedText}</p>`;
     return formattedText;
   };
@@ -37,12 +40,19 @@ const Chatbot = () => {
       .then((res) => {
         setUser(res.data);
         return axios.post(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat/history`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/chat/history`,
           { email }
         );
       })
       .then((res) => {
-        setMessages(res.data.history || []);
+        const formattedHistroy=(res.data.history || []).map((msg) => ({
+          ...msg,
+          text:
+            msg.sender === "bot"
+              ? formatResponse(msg.text.trim())
+              : msg.text,
+        }));
+        setMessages(formattedHistroy);
       })
       .catch((err) => {
         console.error("User /chat error:", err);
@@ -61,27 +71,42 @@ const Chatbot = () => {
   }, [messages]);
 
   const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || !user) return;
+  e.preventDefault();
+  if (!input.trim() || !user) return;
 
-    const updated = [...messages, { sender: "user", text: input }];
-    setMessages(updated);
-    setInput("");
+  const updated = [...messages, { sender: "user", text: input }];
+  setMessages(updated);
+  setInput("");
+  setIsTyping(true); // 👈 START typing
 
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/chat`,
-        { user, history: updated }
-      );
 
-      const formattedReply = formatResponse(res.data.reply);
-      setMessages([...updated, { sender: "bot", text: formattedReply }]);
-    } catch (err) {
-      console.error("Chat error", err);
-      const errorText = err?.response?.data?.error || "Something went wrong.";
-      setMessages([...updated, { sender: "bot", text: errorText }]);
-    }
-  };
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/chat`,
+      {
+        email: email,
+        message: input,
+      },
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const formattedReply = formatResponse(res.data.reply.trim());
+    setTimeout(() =>{
+       setMessages([...updated, { sender: "bot", text: formattedReply }]);
+        setIsTyping(false); 
+    },900);   
+  } catch (err) {
+    console.error("Chat error", err);
+    const errorText = err?.response?.data?.error || "Something went wrong.";
+    setIsTyping(false);
+    setMessages([...updated, { sender: "bot", text: errorText }]);
+  }
+};
 
   return (
     <>
@@ -107,6 +132,18 @@ const Chatbot = () => {
                   />
                 </div>
               ))}
+              {isTyping && (
+              <div className="flex justify-start">
+              <div className="bg-[#D2E3FC] text-black rounded-2xl px-4 py-2 text-sm font-medium">
+              <div className="flex space-x-1">
+              <span className="w-2 h-2 bg-black rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+              <span className="w-2 h-2 bg-black rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+              <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+</div>
+
+              </div>
+              </div>
+        )}
               <div ref={chatEndRef} />
             </div>
 

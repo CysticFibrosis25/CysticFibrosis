@@ -7,11 +7,11 @@ import { toast } from "react-hot-toast";
 const LoginSignup = () => {
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [logging, setLogging] = useState(false);
-  const [signup, setSignup] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,15 +19,16 @@ const LoginSignup = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    age: "",
-    weight: "",
-    height: "",
-    sex: "",
+    emergency_name: "",
+    emergency_relation: "",
+    emergency_phone: "",
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -40,23 +41,22 @@ const LoginSignup = () => {
       }
 
       try {
-        setLogging(true);
-        const res = await axios.post(`${API_BASE_URL}/auth/login`, {
-          email: formData.email,
+        setLoading(true);
+
+        await axios.post(`${API_BASE_URL}/auth/login`, {
+          email: formData.email.trim(),
           password: formData.password,
         });
 
-        if (res.status === 200) {
-          localStorage.setItem("email", formData.email);
-          localStorage.setItem("isLoggedIn", "true");
-          toast.success("Login successful!");
-          setLogging(false);
-          navigate("/dashboard");
-        }
+        localStorage.setItem("email", formData.email.trim());
+        localStorage.setItem("isLoggedIn", "true");
+
+        toast.success("Login successful!");
+        navigate("/dashboard");
       } catch (err) {
-        setLogging(false);
         toast.error(err.response?.data?.message || "Login failed");
-        console.error(err);
+      } finally {
+        setLoading(false);
       }
     } else {
       const {
@@ -65,10 +65,9 @@ const LoginSignup = () => {
         email,
         password,
         confirmPassword,
-        age,
-        weight,
-        height,
-        sex,
+        emergency_name,
+        emergency_relation,
+        emergency_phone,
       } = formData;
 
       if (
@@ -77,12 +76,11 @@ const LoginSignup = () => {
         !email ||
         !password ||
         !confirmPassword ||
-        !age ||
-        !weight ||
-        !height ||
-        !sex
+        !emergency_name ||
+        !emergency_relation ||
+        !emergency_phone
       ) {
-        alert("Please fill all fields");
+        toast.error("Please fill all fields");
         return;
       }
 
@@ -92,40 +90,30 @@ const LoginSignup = () => {
       }
 
       try {
-        setSignup(true);
-        const res = await axios.post(`${API_BASE_URL}/auth/signup`, {
-          name,
-          phone,
-          email,
+        setLoading(true);
+
+        await axios.post(`${API_BASE_URL}/auth/signup`, {
+          name: name.trim(),
+          phone: phone.trim(),
+          email: email.trim(),
           password,
-          age,
-          weight,
-          height,
-          sex,
+          emergency_contact: {
+            name: emergency_name.trim(),
+            relation: emergency_relation.trim(),
+            phone: emergency_phone.trim(),
+          },
         });
 
-        if (res.status === 200 || res.status === 201) {
-          localStorage.setItem("email", email);
-          localStorage.setItem("isLoggedIn", "true");
-          toast.success("Signup successful! Please login.");
-          setSignup(false);
+        localStorage.setItem("email", email.trim());
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("onboardingStep", "health"); // ✅ IMPORTANT
 
-          setFormData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            age: "",
-            weight: "",
-            height: "",
-            sex: "",
-          });
-          navigate("/moreinfo");
-        }
+        toast.success("Signup successful!");
+        navigate("/moreinfo"); // Step-2
       } catch (err) {
         toast.error(err.response?.data?.message || "Signup failed");
-        setSignup(false);
-        console.error(err);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -137,13 +125,16 @@ const LoginSignup = () => {
         alt="Hero"
         className="w-full h-[100vh] object-cover absolute top-0 left-0 z-0"
       />
+
       <div className="absolute top-0 left-0 w-full z-10">
         <Navbar />
+
         <div className="flex flex-col items-center justify-center min-h-[60vh] pt-16">
           <div className="bg-white/80 backdrop-blur-md rounded-lg p-8 max-w-md w-full">
             <h2 className="text-3xl font-bold mb-6 text-center">
               {isLogin ? "Login" : "Signup"}
             </h2>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <>
@@ -154,58 +145,46 @@ const LoginSignup = () => {
                     value={formData.name}
                     onChange={handleChange}
                     className="input"
-                    required
                   />
+                   <br /> 
                   <input
-                    type="number"
+                    type="tel"
                     name="phone"
-                    placeholder="Contact No"
+                    placeholder="Contact Number"
                     value={formData.phone}
                     onChange={handleChange}
                     className="input"
-                    required
                   />
-                  <input
-                    type="number"
-                    name="age"
-                    placeholder="Age"
-                    value={formData.age}
-                    onChange={handleChange}
-                    className="input"
-                    required
-                  />
-                  <input
-                    type="number"
-                    name="weight"
-                    placeholder="Weight (kg)"
-                    value={formData.weight}
-                    onChange={handleChange}
-                    className="input"
-                    required
-                  />
-                  <input
-                    type="number"
-                    name="height"
-                    placeholder="Height (cm)"
-                    value={formData.height}
-                    onChange={handleChange}
-                    className="input"
-                    required
-                  />
-                  <select
-                    name="sex"
-                    value={formData.sex}
-                    onChange={handleChange}
-                    className="input"
-                    required
-                  >
-                    <option value="">Select Sex</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
                   <br />
+                  <input
+                    type="text"
+                    name="emergency_name"
+                    placeholder="Emergency Contact Name"
+                    value={formData.emergency_name}
+                    onChange={handleChange}
+                    className="input"
+                  />
+                  <br/>
+                  <input
+                    type="text"
+                    name="emergency_relation"
+                    placeholder="Relation"
+                    value={formData.emergency_relation}
+                    onChange={handleChange}
+                    className="input"
+                  />
+                  <br/>
+                  <input
+                    type="tel"
+                    name="emergency_phone"
+                    placeholder="Emergency Contact Phone"
+                    value={formData.emergency_phone}
+                    onChange={handleChange}
+                    className="input"
+                  />
                 </>
               )}
+              <br/>
               <input
                 type="email"
                 name="email"
@@ -213,8 +192,8 @@ const LoginSignup = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className="input"
-                required
               />
+              <br/>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -223,16 +202,17 @@ const LoginSignup = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="input"
-                  required
                 />
+                <br/>
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowPassword((p) => !p)}
                   className="absolute right-3 top-2 text-sm text-gray-500"
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
+
               {!isLogin && (
                 <div className="relative">
                   <input
@@ -242,11 +222,10 @@ const LoginSignup = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     className="input"
-                    required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    onClick={() => setShowConfirmPassword((p) => !p)}
                     className="absolute right-3 top-2 text-sm text-gray-500"
                   >
                     {showConfirmPassword ? "Hide" : "Show"}
@@ -254,28 +233,20 @@ const LoginSignup = () => {
                 </div>
               )}
 
-              {logging || signup ? (
-                <div className="flex justify-center mt-4">
-                  <div
-                    className="inline-block w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
-                    role="status"
-                  ></div>
-                </div>
-              ) : (
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 cursor-pointer text-white py-2 rounded-md font-semibold"
-                >
-                  {isLogin ? "Login" : "Signup"}
-                </button>
-              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold"
+              >
+                {loading ? "Please wait..." : isLogin ? "Login" : "Signup"}
+              </button>
             </form>
 
             <p className="mt-4 text-center text-gray-700">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
-                onClick={() => setIsLogin((prev) => !prev)}
-                className="text-blue-600 cursor-pointer font-semibold"
+                onClick={() => setIsLogin((p) => !p)}
+                className="text-blue-600 font-semibold"
               >
                 {isLogin ? "Signup" : "Login"}
               </button>
