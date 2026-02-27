@@ -175,7 +175,10 @@ def fetch_edamam_recipe(query, calories, diet=None, allergies=None):
 
     return {
         "title": r["label"],
-        "image": r.get("image"),
+        image_url = r.get("image")
+        if image_url and image_url.startswith("http://"):
+        image_url = image_url.replace("http://", "https://")
+        "image": image_url,
         "calories": int(per_cal),
         "fat": int(per_fat),
         "protein": int(per_protein),
