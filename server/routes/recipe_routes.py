@@ -175,7 +175,7 @@ def fetch_edamam_recipe(query, calories, diet=None, allergies=None):
 
     return {
         "title": r["label"],
-        "image" = r.get("image"),
+        "image": r.get("image"),
         "calories": int(per_cal),
         "fat": int(per_fat),
         "protein": int(per_protein),
